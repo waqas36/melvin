@@ -27,7 +27,6 @@ class SaleAdvancePaymentInvCustom(models.TransientModel):
         ('progress_fixed', 'Progress claim (fixed amount)'),
 
         ], string='What do you want to invoice?', default=_get_advance_payment_method, required=True)
-    product_id = fields.Many2one('product.product', string='Down Payment Product', domain=[('type', '=', 'service')],)
     progress_amount = fields.Float('Progress Amount', digits=dp.get_precision('Account'), help="The amount to be invoiced in advance, taxes excluded.")
 
     @api.onchange('advance_payment_method')
@@ -56,7 +55,7 @@ class SaleAdvancePaymentInvCustom(models.TransientModel):
         if self.advance_payment_method == 'percentage' or self.advance_payment_method == "amount":
             if self.amount <= 0.00:
                 raise UserError(_('The value of the down payment amount must be positive.'))
-        else:
+        elif self.advance_payment_method == 'progress_percentage' or self.advance_payment_method == "progress_amount":
             if self.progress_amount <= 0.00:
                 raise UserError(_('The value of the progress claim amount must be positive.'))
 
@@ -65,7 +64,7 @@ class SaleAdvancePaymentInvCustom(models.TransientModel):
         if self.advance_payment_method == 'percentage':
             amount = order.amount_untaxed * self.amount / 100
             name = _("Down payment of %s%%") % (self.amount,)
-        elif self.advance_payment_method == 'amount':
+        elif self.advance_payment_method == 'fixed':
             amount = self.amount
             name = _('Down Payment')
 
@@ -128,19 +127,21 @@ class SaleAdvancePaymentInvCustom(models.TransientModel):
         else:
             # Create deposit product if necessary
             if not self.product_id:
-                if self.advance_payment_method == 'percentage' or self.advance_payment_method == "amount":
-                    vals = self._prepare_deposit_product()
-                else:
-                    vals = self._prepare_deposit_product_progress()
-
+                vals = self._prepare_deposit_product()
                 self.product_id = self.env['product.product'].create(vals)
                 self.env['ir.config_parameter'].sudo().set_param('sale.default_deposit_product_id', self.product_id.id)
+
+            if self.advance_payment_method == 'progress_percentage' or self.advance_payment_method == "progress_fixed":
+                vals = self._prepare_deposit_product_progress()
+                self.product_id = self.env["product.product"].search([("name","=",vals["name"])])[0]
+                if not self.product_id:
+                    self.product_id = self.env['product.product'].create(vals)
 
             sale_line_obj = self.env['sale.order.line']
             for order in sale_orders:
                 if self.advance_payment_method == 'percentage':
                     amount = order.amount_untaxed * self.amount / 100
-                elif self.advance_payment_method == 'amount':
+                elif self.advance_payment_method == 'fixed':
                     amount = self.amount
 
                 elif self.advance_payment_method == 'progress_percentage':
