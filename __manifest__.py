@@ -21,6 +21,9 @@
 
     # any module necessary for this one to work correctly
     'depends': ['base', 'sale_management','hr_timesheet', 'purchase'],
+    "images": [
+        "static/description/job.png"
+    ],
 
     # always loaded
     'data': [
