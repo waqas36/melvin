@@ -133,7 +133,7 @@ class SaleAdvancePaymentInvCustom(models.TransientModel):
 
             if self.advance_payment_method == 'progress_percentage' or self.advance_payment_method == "progress_fixed":
                 vals = self._prepare_deposit_product_progress()
-                self.product_id = self.env["product.product"].search([("name","=",vals["name"])])[0]
+                self.product_id = self.env["product.product"].search([("name","=",vals["name"])])
                 if not self.product_id:
                     self.product_id = self.env['product.product'].create(vals)
 
