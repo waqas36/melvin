@@ -86,59 +86,5 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <!-- actions opening views on models -->
-    <!--
-    <record model="ir.actions.act_window" id="jobs.action_window">
-      <field name="name">jobs window</field>
-      <field name="res_model">jobs.jobs</field>
-      <field name="view_mode">tree,form</field>
-    </record>
-    -->
-
-    <!-- server action to the one above -->
-    <!--
-    <record model="ir.actions.server" id="jobs.action_server">
-      <field name="name">jobs server</field>
-      <field name="model_id" ref="model_jobs_jobs"/>
-      <field name="state">code</field>
-      <field name="code">
-        action = {
-          "type": "ir.actions.act_window",
-          "view_mode": "tree,form",
-          "res_model": self._name,
-        }
-      </field>
-    </record>
-    -->
-
-    <!-- Top menu item -->
-    <!--
-    <menuitem name="jobs" id="jobs.menu_root"/>
-    -->
-    <!-- menu categories -->
-    <!--
-    <menuitem name="Menu 1" id="jobs.menu_1" parent="jobs.menu_root"/>
-    <menuitem name="Menu 2" id="jobs.menu_2" parent="jobs.menu_root"/>
-    -->
-    <!-- actions -->
-    <!--
-    <menuitem name="List" id="jobs.menu_1_list" parent="jobs.menu_1"
-              action="jobs.action_window"/>
-    <menuitem name="Server to list" id="jobs" parent="jobs.menu_2"
-              action="jobs.action_server"/>
-    -->
   </data>
 </odoo>
