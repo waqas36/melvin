@@ -1,0 +1,67 @@
+<odoo>
+
+    <data>
+
+         <record id="job_dashboard_form" model="ir.ui.view">
+            <field name="name">Jobs Dashboard Form</field>
+            <field name="model">jobs.dashboard</field>
+            <field name="arch" type="xml">
+                <form string="Jobs">
+                    <sheet string="Jobs Entry">
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="sale_order_id"/>
+                                <field name="award_date"/>
+                                <field name="end_date"/>
+                                <field name="customer_id"/>
+                            </group>
+                            <group>
+                                <field name="project_manager"/>
+                                <field name="total"/>
+                                <field name="status"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="job_dashboard_tree" model="ir.ui.view">
+            <field name="name">Jobs Dashboard Tree</field>
+            <field name="model">jobs.dashboard</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="sale_order_id"/>
+                    <field name="award_date"/>
+                    <field name="end_date"/>
+                    <field name="customer_id"/>
+                    <field name="project_manager"/>
+                    <field name="total"/>
+                    <field name="status"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="act_job_dashboard">
+            <field name="name">Job</field>
+            <field name="res_model">jobs.dashboard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Create Job
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_job_dashboard"
+                  name="Dashboard"
+                  parent="root_menu_item_job"/>
+        <menuitem id="child_menu_job_dashboard"
+                  name="Job"
+                  parent="menu_job_dashboard"
+                  action="act_job_dashboard"/>
+    </data>
+
+</odoo>

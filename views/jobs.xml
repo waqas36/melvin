@@ -1,0 +1,71 @@
+<odoo>
+    <data>
+
+        <record id="job_incident_report_form" model="ir.ui.view">
+            <field name="name">Jobs Incident Report</field>
+            <field name="model">jobs.incident.report</field>
+            <field name="arch" type="xml">
+                <form string="Jobs">
+                    <sheet string="Jobs Entry">
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="job_code"/>
+                                <field name="incident_date"/>
+                                <field name="incident_details"/>
+                                <field name="company_id"/>
+                            </group>
+                            <group>
+                                <field name="severity"/>
+                                <field name="action"/>
+                                <field name="status"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="job_incident_report_tree" model="ir.ui.view">
+            <field name="name">Jobs Incident Report</field>
+            <field name="model">jobs.incident.report</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="job_code"/>
+                    <field name="incident_date"/>
+                    <field name="incident_details"/>
+                    <field name="company_id"/>
+                    <field name="severity"/>
+                    <field name="action"/>
+                    <field name="status"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="act_job_incident_report">
+            <field name="name">Incident Report</field>
+            <field name="res_model">jobs.incident.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Create Incident Report
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="root_menu_item_job"
+                  name="Jobs"/>
+        <menuitem id="jobs_menu_incident_report"
+                  name="Reports"
+                  parent="root_menu_item_job"
+                  />
+        <menuitem id="child_menu_incident_report"
+                  name="Incident Report"
+                  parent="jobs_menu_incident_report"
+                  action="act_job_incident_report"/>
+
+    </data>
+
+
+</odoo>

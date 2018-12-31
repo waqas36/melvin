@@ -1,0 +1,25 @@
+                                  <odoo>
+    <data>
+
+
+        <template id="job_report_dashboard">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <p>This is a sample of Report.</p>
+                    </div>
+                </t>
+            </t>
+        </template>
+        <report
+                string="Job Report"
+                id="action_report_job_dashboard"
+                model="jobs.dashboard"
+                name="melvin.job_report_dashboard"
+                file="melvin.job_report_dashboard"
+                report_type="qweb-pdf"
+                print_report_name="'Job - %s' % (object.name)"
+
+        />
+    </data>
+</odoo>

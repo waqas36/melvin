@@ -28,6 +28,11 @@
         'views/views.xml',
         'views/templates.xml',
         'views/account_analytic_line.xml',
+        'views/jobs.xml',
+        'views/jobs_dashboard.xml',
+        'views/config_settings.xml',
+        'report/job_incident_report.xml',
+        'report/job_report.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
