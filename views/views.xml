@@ -7,15 +7,97 @@
       <field name="inherit_id" ref="sale.view_order_form"/>
       <field name="arch" type="xml">
 
-          <xpath expr="//tree//field[@name='product_id']" position="attributes">
+        <xpath expr="//tree//field[@name='product_id']" position="attributes">
 
-            <attribute name="options" >{'no_create_edit': True}</attribute>
-            <!--<field name="product_id" options="{'no_create_edit': True}" attrs="{'readonly': [('product_updatable', '=', False)]}" force_save="1" context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"/>-->
+          <attribute name="options" >{'no_create_edit': True}</attribute>
+          <!--<field name="product_id" options="{'no_create_edit': True}" attrs="{'readonly': [('product_updatable', '=', False)]}" force_save="1" context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"/>-->
 
-          </xpath>
+        </xpath>
 
       </field>
     </record>
+
+
+    <record model="ir.ui.view" id="inherit_sale_order_tree_view">
+      <field name="name">inherit.sale.order.tree.view</field>
+      <field name="model">sale.order</field>
+      <field name="inherit_id" ref="sale.view_order_form"/>
+      <field name="arch" type="xml">
+
+        <xpath expr="//tree//field[@name='product_id']" position="attributes">
+
+          <attribute name="options" >{'no_create_edit': True}</attribute>
+
+
+        </xpath>
+
+      </field>
+    </record>
+
+
+
+    <record model="ir.ui.view" id="inherit_sale_order_tree_view">
+      <field name="name">inherit.sale.advance</field>
+      <field name="model">sale.advance.payment.inv</field>
+      <field name="inherit_id" ref="sale.view_sale_advance_payment_inv"/>
+      <field name="arch" type="xml">
+
+        <xpath expr="//group" position="replace">
+
+          <field name="count" invisible="[('count','=',1)]" readonly="True"/>
+          <field name="advance_payment_method" class="oe_inline" widget="radio"  attrs="{'invisible': [('count','&gt;',1)]}"/>
+          <field name="product_id"
+                 context="{'search_default_services': 1, 'default_type': 'service', 'default_invoice_policy': 'order'}" class="oe_inline"
+                 invisible="1"/>
+          <label for="amount" attrs="{'invisible': [('advance_payment_method', 'not in', ('fixed','percentage'))]}"/>
+
+          <label for="progress_amount" attrs="{'invisible': [('advance_payment_method', 'not in', ('progress_fixed','progress_percentage'))]}"/>
+
+
+          <div attrs="{'invisible': [('advance_payment_method', 'not in', ('fixed','percentage'))]}">
+            <field name="amount"
+                   attrs="{'required': [('advance_payment_method', 'in', ('fixed','percentage'))]}" class="oe_inline" widget="monetary"/>
+            <label string="%%"
+                   attrs="{'invisible': [('advance_payment_method', '!=', 'percentage')]}" class="oe_inline"/>
+          </div>
+
+          <div attrs="{'invisible': [('advance_payment_method', 'not in', ('progress_fixed','progress_percentage'))]}">
+            <field name="progress_amount"
+                   attrs="{'required': [('advance_payment_method', 'in', ('progress_fixed','progress_percentage'))]}" class="oe_inline" widget="monetary"/>
+            <label string="%%"
+                   attrs="{'invisible': [('advance_payment_method', '!=', 'progress_percentage')]}" class="oe_inline"/>
+          </div>
+
+
+          <field name="deposit_account_id" class="oe_inline"
+                 attrs="{'invisible': ['|', ('advance_payment_method', 'not in', ('fixed', 'percentage')), ('product_id', '!=', False)]}" groups="account.group_account_manager"/>
+          <field name="deposit_taxes_id" class="oe_inline" widget="many2many_tags"
+                 domain="[('type_tax_use','=','sale')]"
+                 attrs="{'invisible': ['|', ('advance_payment_method', 'not in', ('fixed', 'percentage')), ('product_id', '!=', False)]}"/>
+
+
+
+
+        </xpath>
+
+      </field>
+    </record>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     <!-- actions opening views on models -->
     <!--
