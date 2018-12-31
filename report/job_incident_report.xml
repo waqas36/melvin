@@ -1,0 +1,25 @@
+<odoo>
+    <data>
+
+
+        <template id="job_incident_report">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <p>This is a sample of Report.</p>
+                    </div>
+                </t>
+            </t>
+        </template>
+        <report
+                string="Incident Report"
+                id="action_report_job"
+                model="jobs.incident.report"
+                name="melvin.job_incident_report"
+                file="melvin.job_incident_report"
+                report_type="qweb-pdf"
+                print_report_name="'Job Incident- %s' % (object.name)"
+
+        />
+    </data>
+</odoo>

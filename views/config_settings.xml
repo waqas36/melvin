@@ -1,0 +1,35 @@
+<odoo>
+    <data>
+        <record id="config_settings_form" model="ir.ui.view">
+            <field name="name">Settings</field>
+            <field name="model">config.settings</field>
+            <field name="arch" type="xml">
+                <form string="Settings">
+                    <sheet>
+                        <field name="project_type"/>
+                        <field name="project_status"/>
+                    </sheet>
+                </form>
+
+            </field>
+        </record>
+
+
+        <record id="act_config_settings" model="ir.actions.act_window">
+            <field name="name">Settings</field>
+            <field name="res_model">config.settings</field>
+            <field name="view_type">form</field>
+            <!--<field name="view_mode">form</field>-->
+        </record>
+
+        <menuitem id="menu_config_settings"
+                  name="Configuration"
+                  parent="root_menu_item_job"/>
+        <menuitem id="child_menu_config_settings"
+                  name="Settings"
+                  parent="menu_config_settings"
+                  action="act_config_settings"/>
+
+
+    </data>
+</odoo>
