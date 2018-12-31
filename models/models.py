@@ -27,13 +27,8 @@ class SaleAdvancePaymentInvCustom(models.TransientModel):
         ('progress_fixed', 'Progress claim (fixed amount)'),
 
         ], string='What do you want to invoice?', default=_get_advance_payment_method, required=True)
-
     product_id = fields.Many2one('product.product', string='Down Payment Product', domain=[('type', '=', 'service')],)
     progress_amount = fields.Float('Progress Amount', digits=dp.get_precision('Account'), help="The amount to be invoiced in advance, taxes excluded.")
-
-
-
-
 
     @api.onchange('advance_payment_method')
     def onchange_advance_payment_method(self):

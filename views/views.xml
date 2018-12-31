@@ -43,15 +43,13 @@
       <field name="arch" type="xml">
 
         <xpath expr="//group" position="replace">
-
+<group>
           <field name="count" invisible="[('count','=',1)]" readonly="True"/>
           <field name="advance_payment_method" class="oe_inline" widget="radio"  attrs="{'invisible': [('count','&gt;',1)]}"/>
           <field name="product_id"
                  context="{'search_default_services': 1, 'default_type': 'service', 'default_invoice_policy': 'order'}" class="oe_inline"
                  invisible="1"/>
           <label for="amount" attrs="{'invisible': [('advance_payment_method', 'not in', ('fixed','percentage'))]}"/>
-
-          <label for="progress_amount" attrs="{'invisible': [('advance_payment_method', 'not in', ('progress_fixed','progress_percentage'))]}"/>
 
 
           <div attrs="{'invisible': [('advance_payment_method', 'not in', ('fixed','percentage'))]}">
@@ -61,6 +59,8 @@
                    attrs="{'invisible': [('advance_payment_method', '!=', 'percentage')]}" class="oe_inline"/>
           </div>
 
+          <label for="progress_amount" attrs="{'invisible': [('advance_payment_method', 'not in', ('progress_fixed','progress_percentage'))]}"/>
+
           <div attrs="{'invisible': [('advance_payment_method', 'not in', ('progress_fixed','progress_percentage'))]}">
             <field name="progress_amount"
                    attrs="{'required': [('advance_payment_method', 'in', ('progress_fixed','progress_percentage'))]}" class="oe_inline" widget="monetary"/>
@@ -68,7 +68,7 @@
                    attrs="{'invisible': [('advance_payment_method', '!=', 'progress_percentage')]}" class="oe_inline"/>
           </div>
 
-
+          <!--<field name="advance_payment_method" class="oe_inline" widget="radio"  attrs="{'invisible': [('count','&gt;',1)]}"/>-->
           <field name="deposit_account_id" class="oe_inline"
                  attrs="{'invisible': ['|', ('advance_payment_method', 'not in', ('fixed', 'percentage')), ('product_id', '!=', False)]}" groups="account.group_account_manager"/>
           <field name="deposit_taxes_id" class="oe_inline" widget="many2many_tags"
@@ -77,7 +77,7 @@
 
 
 
-
+</group>
         </xpath>
 
       </field>
