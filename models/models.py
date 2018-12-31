@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
+import time
+from odoo import models, fields, api,_
+from odoo.addons import decimal_precision as dp
+from odoo.exceptions import UserError
 
-from odoo import models, fields, api
 
 class SaleAdvancePaymentInvCustom(models.TransientModel):
     _inhert = "sale.advance.payment.inv"
