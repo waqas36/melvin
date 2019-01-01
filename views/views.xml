@@ -1,72 +1,118 @@
 <odoo>
-  <data>
+    <data>
 
-      <record model="ir.ui.view" id="inherit_sale_order_tree_view_1">
-      <field name="name">sale.order.form.inherit.many2many</field>
-      <field name="model">sale.order</field>
-      <field name="inherit_id" ref="sale.view_order_form"/>
-      <field name="arch" type="xml">
+        <record id="jobs.action_job_selection" model="ir.actions.act_window">
+            <field name="name">Job Order</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">job.selection</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="groups_id" eval="[(4,ref('sales_team.group_sale_salesman'))]"/>
+            <!-- TODO: check if we need this -->
+            <field name="binding_model_id" ref="sale.model_sale_order" />
+        </record>
 
-        <xpath expr="//tree//field[@name='product_id']" position="replace">
+        <record model="ir.ui.view" id="inherit_sale_order_tree_view_1">
+            <field name="name">sale.order.form.inherit.many2many</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
 
-          <!--<attribute name="options" >{'no_create_edit': True}</attribute>-->
-          <field name="product_id" options="{'no_create_edit': True}" attrs="{'readonly': [('product_updatable', '=', False)]}" force_save="1" context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"/>
+                <xpath expr="//tree//field[@name='product_id']" position="replace">
 
-        </xpath>
+                    <!--<attribute name="options" >{'no_create_edit': True}</attribute>-->
+                    <field name="product_id" options="{'no_create_edit': True}" attrs="{'readonly': [('product_updatable', '=', False)]}" force_save="1" context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"/>
 
-      </field>
-    </record>
-
-
-      <record model="ir.ui.view" id="inherit_sale_order_tree_view">
-      <field name="name">inherit.sale.advance</field>
-      <field name="model">sale.advance.payment.inv</field>
-      <field name="inherit_id" ref="sale.view_sale_advance_payment_inv"/>
-      <field name="arch" type="xml">
-
-        <xpath expr="//group" position="replace">
-<group>
-          <field name="count" invisible="[('count','=',1)]" readonly="True"/>
-          <field name="advance_payment_method" class="oe_inline" widget="radio"  attrs="{'invisible': [('count','&gt;',1)]}"/>
-          <field name="product_id"
-                 context="{'search_default_services': 1, 'default_type': 'service', 'default_invoice_policy': 'order'}" class="oe_inline"
-                 invisible="1"/>
-          <label for="amount" attrs="{'invisible': [('advance_payment_method', 'not in', ('fixed','percentage'))]}"/>
+                </xpath>
 
 
-          <div attrs="{'invisible': [('advance_payment_method', 'not in', ('fixed','percentage'))]}">
-            <field name="amount"
-                   attrs="{'required': [('advance_payment_method', 'in', ('fixed','percentage'))]}" class="oe_inline" widget="monetary"/>
-            <label string="%%"
-                   attrs="{'invisible': [('advance_payment_method', '!=', 'percentage')]}" class="oe_inline"/>
-          </div>
+                <xpath expr="//button[@name='action_done']" position="after">
+                    <button name="%(jobs.action_job_selection)d" string="Create Job"
+                            type="action"  attrs="{'invisible': [('invoice_status', '!=', 'to invoice')]}" class="btn-primary"/>
 
-          <label for="progress_amount" attrs="{'invisible': [('advance_payment_method', 'not in', ('progress_fixed','progress_percentage'))]}"/>
-
-          <div attrs="{'invisible': [('advance_payment_method', 'not in', ('progress_fixed','progress_percentage'))]}">
-            <field name="progress_amount"
-                   attrs="{'required': [('advance_payment_method', 'in', ('progress_fixed','progress_percentage'))]}" class="oe_inline" widget="monetary"/>
-            <label string="%%"
-                   attrs="{'invisible': [('advance_payment_method', '!=', 'progress_percentage')]}" class="oe_inline"/>
-          </div>
-
-          <!--<field name="advance_payment_method" class="oe_inline" widget="radio"  attrs="{'invisible': [('count','&gt;',1)]}"/>-->
-          <field name="deposit_account_id" class="oe_inline"
-                 attrs="{'invisible': ['|', ('advance_payment_method', 'not in', ('fixed', 'percentage')), ('product_id', '!=', False)]}" groups="account.group_account_manager"/>
-          <field name="deposit_taxes_id" class="oe_inline" widget="many2many_tags"
-                 domain="[('type_tax_use','=','sale')]"
-                 attrs="{'invisible': ['|', ('advance_payment_method', 'not in', ('fixed', 'percentage')), ('product_id', '!=', False)]}"/>
+                </xpath>
 
 
 
-</group>
-        </xpath>
+            </field>
+        </record>
 
-      </field>
-    </record>
+        <record model="ir.ui.view" id="inherit_sale_order_tree_view">
+            <field name="name">inherit.sale.advance</field>
+            <field name="model">sale.advance.payment.inv</field>
+            <field name="inherit_id" ref="sale.view_sale_advance_payment_inv"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//group" position="replace">
+                    <group>
+                        <field name="count" invisible="[('count','=',1)]" readonly="True"/>
+                        <field name="advance_payment_method" class="oe_inline" widget="radio"  attrs="{'invisible': [('count','&gt;',1)]}"/>
+                        <field name="product_id"
+                               context="{'search_default_services': 1, 'default_type': 'service', 'default_invoice_policy': 'order'}" class="oe_inline"
+                               invisible="1"/>
+                        <label for="amount" attrs="{'invisible': [('advance_payment_method', 'not in', ('fixed','percentage'))]}"/>
+
+
+                        <div attrs="{'invisible': [('advance_payment_method', 'not in', ('fixed','percentage'))]}">
+                            <field name="amount"
+                                   attrs="{'required': [('advance_payment_method', 'in', ('fixed','percentage'))]}" class="oe_inline" widget="monetary"/>
+                            <label string="%%"
+                                   attrs="{'invisible': [('advance_payment_method', '!=', 'percentage')]}" class="oe_inline"/>
+                        </div>
+
+                        <label for="progress_amount" attrs="{'invisible': [('advance_payment_method', 'not in', ('progress_fixed','progress_percentage'))]}"/>
+
+                        <div attrs="{'invisible': [('advance_payment_method', 'not in', ('progress_fixed','progress_percentage'))]}">
+                            <field name="progress_amount"
+                                   attrs="{'required': [('advance_payment_method', 'in', ('progress_fixed','progress_percentage'))]}" class="oe_inline" widget="monetary"/>
+                            <label string="%%"
+                                   attrs="{'invisible': [('advance_payment_method', '!=', 'progress_percentage')]}" class="oe_inline"/>
+                        </div>
+
+                        <!--<field name="advance_payment_method" class="oe_inline" widget="radio"  attrs="{'invisible': [('count','&gt;',1)]}"/>-->
+                        <field name="deposit_account_id" class="oe_inline"
+                               attrs="{'invisible': ['|', ('advance_payment_method', 'not in', ('fixed', 'percentage')), ('product_id', '!=', False)]}" groups="account.group_account_manager"/>
+                        <field name="deposit_taxes_id" class="oe_inline" widget="many2many_tags"
+                               domain="[('type_tax_use','=','sale')]"
+                               attrs="{'invisible': ['|', ('advance_payment_method', 'not in', ('fixed', 'percentage')), ('product_id', '!=', False)]}"/>
+
+
+
+                    </group>
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="view_job_selection" model="ir.ui.view">
+            <field name="name">Job Orders</field>
+            <field name="model">job.selection</field>
+            <field name="arch" type="xml">
+                <form string="Create Job">
+
+                    <group>
+                        <!--<field name="count" invisible="[('count','=',1)]" readonly="True"/>-->
+                        <field name="job_selection" class="oe_inline" widget="radio" />
+
+                        <label for="existing_job" attrs="{'invisible': [('job_selection', 'not in', ('existing'))]}"/>
+                        <div attrs="{'invisible': [('job_selection', 'not in', ('existing'))]}">
+                            <field name="existing_job"
+                                attrs="{'invisible': [('job_selection', 'not in', ('existing'))]}" class="oe_inline" />
+                        </div>
+
+                    </group>
+                    <footer>
+                        <button name="create_job" string="Confirm" type="object" context="{'open_job': True}" class="btn-primary"/>
+                        <!--<button name="create_job" string="Create and View Job" type="object"   class="btn-primary"/>-->
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
 
 
 
 
-  </data>
+    </data>
 </odoo>

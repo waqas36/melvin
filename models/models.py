@@ -185,3 +185,20 @@ class SaleAdvancePaymentInvCustom(models.TransientModel):
             'taxes_id': [(6, 0, self.deposit_taxes_id.ids)],
             'company_id': False,
         }
+
+
+class JobSelection(models.TransientModel):
+    """
+
+    """
+    _name = "job.selection"
+    existing_job = fields.Many2one('jobs.dashboard')
+    job_selection = fields.Selection([
+        ('new', 'New Job'),
+        ('existing', 'Select from Existing Jobs'),
+        ], string='Job Selection', required=True)
+
+    @api.multi
+    def create_job(self):
+
+        return {'type': 'ir.actions.act_window_close'}
