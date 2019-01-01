@@ -29,6 +29,8 @@
         'views/templates.xml',
         'views/account_analytic_line.xml',
         'views/jobs.xml',
+        'views/sequence.xml',
+        'views/purchase_order.xml',
         'views/jobs_dashboard.xml',
         'views/config_settings.xml',
         'report/job_incident_report.xml',
