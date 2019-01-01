@@ -34,6 +34,7 @@
         'views/jobs.xml',
         'views/sequence.xml',
         'views/purchase_order.xml',
+        'views/sale_order.xml',
         'views/jobs_dashboard.xml',
         'views/config_settings.xml',
         'report/job_incident_report.xml',

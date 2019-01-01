@@ -54,7 +54,7 @@
                     <field name="customer_id"/>
                     <field name="project_manager"/>
                     <field name="total"/>
-                    <field name="status"/>
+                    <field name="status" />
                 </tree>
             </field>
         </record>
