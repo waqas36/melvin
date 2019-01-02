@@ -200,5 +200,10 @@ class JobSelection(models.TransientModel):
 
     @api.multi
     def create_job(self):
+        sale_order = self.env['sale.order'].browse(self._context.get('active_ids', []))
+        if self.job_selection == "existing":
+            self.existing_job.sale_orders = ([sale_order.id])
+        else:
+            pass
 
         return {'type': 'ir.actions.act_window_close'}

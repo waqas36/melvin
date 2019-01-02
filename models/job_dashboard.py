@@ -5,7 +5,7 @@ class JobsDashboard(models.Model):
     _name = 'jobs.dashboard'
 
     name = fields.Char(string='Job Code', default='New')
-    sale_order_id = fields.Many2many('sale.order', string='Sale Order')
+    sale_orders = fields.Many2many('sale.order', string='Sale Order')
     award_date = fields.Date(string='Award Date')
     end_date = fields.Date(string="End Date")
     customer_id = fields.Many2one('res.partner', string='Customer')
