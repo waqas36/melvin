@@ -1,7 +1,7 @@
 <odoo>
     <data>
 
-        <record id="jobs.action_job_selection" model="ir.actions.act_window">
+         <record id="jobs.action_job_selection" model="ir.actions.act_window">
             <field name="name">Job Order</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">job.selection</field>
@@ -12,7 +12,6 @@
             <!-- TODO: check if we need this -->
             <field name="binding_model_id" ref="sale.model_sale_order" />
         </record>
-
         <record model="ir.ui.view" id="inherit_sale_order_tree_view_1">
             <field name="name">sale.order.form.inherit.many2many</field>
             <field name="model">sale.order</field>
@@ -29,6 +28,8 @@
 
                 <xpath expr="//button[@name='action_done']" position="after">
                     <button name="%(jobs.action_job_selection)d" string="Create Job"
+                            context="{'default_cus_inv_id': active_id}"
+
                             type="action"  attrs="{'invisible': [('invoice_status', '!=', 'to invoice')]}" class="btn-primary"/>
 
                 </xpath>
@@ -84,6 +85,8 @@
 
             </field>
         </record>
+
+
 
         <record id="view_job_selection" model="ir.ui.view">
             <field name="name">Job Orders</field>

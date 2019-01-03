@@ -200,5 +200,19 @@ class JobSelection(models.TransientModel):
 
     @api.multi
     def create_job(self):
+        sale_order = self.env['sale.order'].browse(self._context.get('active_ids', []))
+        if self.job_selection == "existing":
+            self.existing_job.sale_orders = ([sale_order.id])
+        else:
+            obj = self.env['jobs.dashboard'].create({
+                'name': self.env['ir.sequence'].next_by_code('job.code'),
+                 })
+            obj.sale_orders = ([sale_order.id])
+
+            obj.customer_id = sale_order.partner_id
+            obj.delivery_address = sale_order.partner_id.contact_address
+            obj.confirmation_date = sale_order.confirmation_date
+            obj.currency_id = sale_order.currency_id
+            obj.contract_value = sale_order.amount_total
 
         return {'type': 'ir.actions.act_window_close'}
