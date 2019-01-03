@@ -34,6 +34,7 @@
         'views/jobs.xml',
         'views/sequence.xml',
         'views/purchase_order.xml',
+        'views/web_tree_dynamic_colored_field.xml',
         'views/sale_order.xml',
         'views/jobs_dashboard.xml',
         'views/config_settings.xml',
