@@ -7,6 +7,12 @@
             <field name="model">jobs.dashboard</field>
             <field name="arch" type="xml">
                 <form string="Jobs">
+                    <header>
+                        <button name="action_dispute" class="oe_highlight" type="object" string="A" states="dispute"/>
+                        <button name="action_incident" class="oe_highlight" type="object" string="B" states="incident"/>
+                        <field name="state" widget="statusbar" statusbar_visible="live,incident,dispute"/>
+                    </header>
+
                     <sheet string="Jobs Entry">
                         <div class="oe_title">
                             <label string="Job Code :"/>
@@ -198,15 +204,20 @@
             <field name="name">Jobs Dashboard Tree</field>
             <field name="model">jobs.dashboard</field>
             <field name="arch" type="xml">
-                <tree>
+                <tree colors="color_field: red_color,orange_color,green_color">
                     <field name="name"/>
                     <field name="sale_orders"/>
                     <field name="award_date"/>
                     <field name="end_date"/>
                     <field name="customer_id"/>
                     <field name="project_manager"/>
-                    <!--<field name="total"/>-->
-                    <field name="status" />
+
+                    <field name="green_color" invisible="1"/>
+                    <field name="red_color" invisible="1"/>
+                    <field name="orange_color" invisible="1"/>
+                    <field name="status"
+                           options='{"fg_color": "red:red_color == True; green:green_color == True; orange:orange_color == True;"}'/>
+
                 </tree>
             </field>
         </record>

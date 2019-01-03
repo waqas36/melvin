@@ -78,6 +78,7 @@ class JobsDashboard(models.Model):
             job.safety_incidents = len(self.env['jobs.incident.report'].search([("job_code","=",job.id )]))
 
     name = fields.Char(string='Job Code', default='New')
+
     project_description = fields.Char(string="Project Description")
     delivery_address = fields.Char(string="Delivery Address")
     project_type = fields.Char(string="Project Type")
@@ -88,7 +89,6 @@ class JobsDashboard(models.Model):
     customer_id = fields.Many2one('res.partner', string='Customer')
     project_manager = fields.Many2one('res.users', string="Project Manager")
 
-    status = fields.Selection([('live', 'Live')])
     project_duration = fields.Integer(string="Project Duration(days)", compute=_compute_duration, readonly=True)
     profit_to_date = fields.Integer(string="Profit to Date", readonly=True)
     man_days_worked = fields.Integer(string="Man Days Worked")
@@ -121,6 +121,15 @@ class JobsDashboard(models.Model):
     contract_value = fields.Integer(string="Contract Value")
     currency_id = fields.Many2one("res.currency", string="Currency")
 
+    sale_order_id = fields.Many2many('sale.order', string='Sale Order')
+
+    status = fields.Selection([('live', 'Live')], default='live', readonly=True)
+    state = fields.Selection([('dispute', 'Dispute'), ('incident', 'Incident'), ('live', 'Live')], string='State',
+                             default='dispute')
+    green_color = fields.Boolean(default=False)
+    orange_color = fields.Boolean(default=False)
+    red_color = fields.Boolean(default=True)
+
     @api.model
     def create(self, vals):
         vals['name'] = self.env['ir.sequence'].next_by_code('job.code')
@@ -143,6 +152,18 @@ class JobsDashboard(models.Model):
             for order in self.sale_orders:
                 amount = amount + order.amount_total
             self.contract_value = amount
+
+    @api.multi
+    def action_dispute(self):
+        self.state = 'incident'
+        self.red_color = False
+        self.orange_color = True
+
+    @api.multi
+    def action_incident(self):
+        self.state = 'live'
+        self.orange_color = False
+        self.green_color = True
 
 
 class PurchaseOrder(models.Model):
