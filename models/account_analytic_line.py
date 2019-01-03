@@ -8,7 +8,7 @@ class AccountAnalyticLineExt(models.Model):
 
     # employee_id = fields.Many2one('hr.employee', string="Employee")
     employee_code = fields.Char(string="Employee Code")
-    job_code = fields.Char(string="Job Code")
+    job_code = fields.Many2one('jobs.dashboard', string='Job Code')
     date = fields.Date(string="Date")
     time_start = fields.Datetime('Time Start')
     time_end = fields.Datetime('Time End')
