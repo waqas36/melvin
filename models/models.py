@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 import time
-from odoo import models, fields, api,_
+
+from odoo import models, fields, api, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
+from odoo.exceptions import ValidationError, AccessError
+
 
 
 class SaleAdvancePaymentInvCustom(models.TransientModel):
@@ -26,8 +29,9 @@ class SaleAdvancePaymentInvCustom(models.TransientModel):
         ('progress_percentage', 'Progress claim (percentage)'),
         ('progress_fixed', 'Progress claim (fixed amount)'),
 
-        ], string='What do you want to invoice?', default=_get_advance_payment_method, required=True)
-    progress_amount = fields.Float('Progress Amount', digits=dp.get_precision('Account'), help="The amount to be invoiced in advance, taxes excluded.")
+    ], string='What do you want to invoice?', default=_get_advance_payment_method, required=True)
+    progress_amount = fields.Float('Progress Amount', digits=dp.get_precision('Account'),
+                                   help="The amount to be invoiced in advance, taxes excluded.")
 
     @api.onchange('advance_payment_method')
     def onchange_advance_payment_method(self):
@@ -50,7 +54,8 @@ class SaleAdvancePaymentInvCustom(models.TransientModel):
             account_id = order.fiscal_position_id.map_account(inc_acc).id if inc_acc else False
         if not account_id:
             raise UserError(
-                _('There is no income account defined for this product: "%s". You may have to install a chart of account from Accounting app, settings menu.') %
+                _(
+                    'There is no income account defined for this product: "%s". You may have to install a chart of account from Accounting app, settings menu.') %
                 (self.product_id.name,))
         if self.advance_payment_method == 'percentage' or self.advance_payment_method == "amount":
             if self.amount <= 0.00:
@@ -112,8 +117,8 @@ class SaleAdvancePaymentInvCustom(models.TransientModel):
         })
         invoice.compute_taxes()
         invoice.message_post_with_view('mail.message_origin_link',
-                    values={'self': invoice, 'origin': order},
-                    subtype_id=self.env.ref('mail.mt_note').id)
+                                       values={'self': invoice, 'origin': order},
+                                       subtype_id=self.env.ref('mail.mt_note').id)
         return invoice
 
     @api.multi
@@ -133,7 +138,7 @@ class SaleAdvancePaymentInvCustom(models.TransientModel):
 
             if self.advance_payment_method == 'progress_percentage' or self.advance_payment_method == "progress_fixed":
                 vals = self._prepare_deposit_product_progress()
-                self.product_id = self.env["product.product"].search([("name","=",vals["name"])])
+                self.product_id = self.env["product.product"].search([("name", "=", vals["name"])])
                 if not self.product_id:
                     self.product_id = self.env['product.product'].create(vals)
 
@@ -150,10 +155,13 @@ class SaleAdvancePaymentInvCustom(models.TransientModel):
                     amount = self.progress_amount
 
                 if self.product_id.invoice_policy != 'order':
-                    raise UserError(_('The product used to invoice a down payment should have an invoice policy set to "Ordered quantities". Please update your deposit product to be able to create a deposit invoice.'))
+                    raise UserError(_(
+                        'The product used to invoice a down payment should have an invoice policy set to "Ordered quantities". Please update your deposit product to be able to create a deposit invoice.'))
                 if self.product_id.type != 'service':
-                    raise UserError(_("The product used to invoice a down payment should be of type 'Service'. Please use another product or update this product."))
-                taxes = self.product_id.taxes_id.filtered(lambda r: not order.company_id or r.company_id == order.company_id)
+                    raise UserError(_(
+                        "The product used to invoice a down payment should be of type 'Service'. Please use another product or update this product."))
+                taxes = self.product_id.taxes_id.filtered(
+                    lambda r: not order.company_id or r.company_id == order.company_id)
                 if order.fiscal_position_id and taxes:
                     tax_ids = order.fiscal_position_id.map_tax(taxes).ids
                 else:
@@ -196,17 +204,20 @@ class JobSelection(models.TransientModel):
     job_selection = fields.Selection([
         ('new', 'New Job'),
         ('existing', 'Select from Existing Jobs'),
-        ], string='Job Selection', required=True)
+    ], string='Job Selection', required=True)
 
     @api.multi
     def create_job(self):
         sale_order = self.env['sale.order'].browse(self._context.get('active_ids', []))
+        if sale_order.job_dashboard_id:
+            raise ValidationError(_('Error! You cannot select recursive sale orders.'))
         if self.job_selection == "existing":
             self.existing_job.sale_orders = ([sale_order.id])
         else:
             obj = self.env['jobs.dashboard'].create({
-                'name': self.env['ir.sequence'].next_by_code('job.code'),
-                 })
+                'name': "code",
+            })
+            sale_order.is_job = True
             obj.sale_orders = ([sale_order.id])
 
             obj.customer_id = sale_order.partner_id
@@ -215,4 +226,12 @@ class JobSelection(models.TransientModel):
             obj.currency_id = sale_order.currency_id
             obj.contract_value = sale_order.amount_total
 
-        return {'type': 'ir.actions.act_window_close'}
+            return {
+                'name': ('Job Dashboard'),
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'jobs.dashboard',
+                'res_id': obj.id,
+                'type': 'ir.actions.act_window',
+                # 'target': 'new'
+            }

@@ -6,7 +6,7 @@ class JobsIncindentReport(models.Model):
 
     name = fields.Char(string='PIC')
     job_code = fields.Many2one('jobs.dashboard', string='Job Code')
-    incident_date = fields.Char(string='Incident Date')
+    incident_date = fields.Date(string='Incident Date')
     incident_details = fields.Text(string="Incident Details")
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
     severity = fields.Selection([('minor', 'Minor'), ('major', 'Major')])

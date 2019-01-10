@@ -11,6 +11,10 @@
                     <button name="action_cancel" groups="base.group_system" states="draft,sent,sale" type="object"
                             string="Cancel"/>
                 </xpath>
+                <xpath expr="//button[@name='action_cancel']" position="after">
+                    <field name="job_dashboard_id" />
+                    <field name="is_job" />
+                </xpath>
             </field>
         </record>
 

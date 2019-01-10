@@ -35,7 +35,7 @@
                             </group>
                         </group>
                         <notebook>
-                            <page string="Project Dashboard">
+                            <page string="Job Performance">
                                 <group>
                                     <field name="claim_progress" string="Claim Progress"/>
                                     <field name="expense_progress" string="Work Progress"/>
@@ -133,7 +133,7 @@
                                     </kanban>
                                 </field>
                                 <group class="oe_footer" col="12"  >
-                                    <label string="All" colspan="4" />
+                                    <label string="Summary" colspan="4" />
                                     <label string="All Certified" style="text-align: right;" colspan="2" />
                                     <label string="All Progress" style="text-align: right;" colspan="2" />
                                     <label string="All Committed" style="text-align: right;" colspan="2" />
@@ -148,7 +148,7 @@
                                     <field name="expense_budget" nolabel="1"  style="text-align: right;" colspan="2" />
                                 </group>
                                 <group class="oe_footer" col="12"  >
-                                    <label for="claim_to_date" string="Claim To Date" colspan="4" />
+                                    <label for="claim_to_date" string="Sales" colspan="4" />
                                     <field name="claim_to_date" nolabel="1" style="text-align: right;" colspan="2" />
                                     <field name="claim_progress" nolabel="1" style="text-align: right; " colspan="2" />
                                     <field name="claim_committed" nolabel="1" style="text-align: right; " colspan="2" />
@@ -210,6 +210,8 @@
                     <field name="award_date"/>
                     <field name="end_date"/>
                     <field name="customer_id"/>
+                    <field name="project_description"/>
+                    <field name="contract_value"/>
                     <field name="project_manager"/>
 
                     <field name="green_color" invisible="1"/>

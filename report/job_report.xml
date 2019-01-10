@@ -1,127 +1,189 @@
 <odoo>
     <data>
 
-
         <template id="job_report_dashboard">
             <t t-call="web.html_container">
                 <t t-foreach="docs" t-as="o">
                     <t t-call="web.external_layout">
                         <div class="page">
-                            <h2>Pay Slip</h2>
-                            <!--<p t-field="o.name"/>-->
-
-                            <table class="table table-condensed mb32">
+                            <br/>
+                            <h3 class="text-center">Jobs Costing Report</h3>
+                            <br/>
+                            <table class="table table-condensed">
                                 <tr>
                                     <td>
-                                        <strong>Name</strong>
+                                        <strong>Job Code :</strong>
                                     </td>
                                     <td>
-                                        <!--<span t-field="o.employee_id"/>-->
+                                        <span t-field="o.name"/>
                                     </td>
                                     <td>
-                                        <strong>Designation</strong>
+                                        <strong>Project Description :</strong>
                                     </td>
                                     <td>
-                                        <!--<span t-field="o.employee_id.job_id"/>-->
+                                        <span t-field="o.project_duration"/>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <strong>Address</strong>
+                                        <strong>Project Manager :</strong>
                                     </td>
-                                    <td colspan="3">
-                                        <!--<div t-field="o.employee_id.address_home_id"-->
-                                        <!--t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>-->
+                                    <td>
+                                        <span t-field="o.project_manager"/>
+                                    </td>
+                                    <td>
+                                        <strong>Customer :</strong>
+                                    </td>
+                                    <td>
+                                        <span t-field="o.customer_id.name"/>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <strong>Email</strong>
+                                        <strong>Project Duration :</strong>
                                     </td>
                                     <td>
-                                        <!--<span t-field="o.employee_id.work_email"/>-->
+                                        <span t-field="o.project_duration"/>
                                     </td>
                                     <td>
-                                        <strong>Identification No</strong>
+                                        <strong>Delivery Address :</strong>
                                     </td>
                                     <td>
-                                        <!--<span t-field="o.employee_id.identification_id"/>-->
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <strong>Reference</strong>
-                                    </td>
-                                    <td>
-                                        <!--<span t-field="o.number"/>-->
-                                    </td>
-                                    <td>
-                                        <strong>Bank Account</strong>
-                                    </td>
-                                    <td>
-                                        <!--<span t-field="o.employee_id.bank_account_id"/>-->
+                                        <span t-field="o.delivery_address"/>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <strong>Date From</strong>
+                                        <strong>Status :</strong>
                                     </td>
                                     <td>
-                                        <!--<span t-field="o.date_from"/>-->
+                                        <span t-field="o.status"/>
                                     </td>
                                     <td>
-                                        <strong>Date To</strong>
+                                        <strong>Project Type :</strong>
                                     </td>
                                     <td>
-                                        <!--<span t-field="o.date_to"/>-->
+                                        <span t-field="o.project_type"/>
                                     </td>
                                 </tr>
                             </table>
-
+                            <br/>
+                            <br/>
+                            <h3 class="text-center">Project Summary</h3>
+                            <br/>
                             <table class="table table-condensed">
                                 <thead>
                                     <tr>
-                                        <th>Code</th>
-                                        <th>Name</th>
-                                        <th>Quantity/rate</th>
-                                        <th>Amount</th>
-                                        <th>Total</th>
+                                        <th>
+                                            <strong>Expense Category</strong>
+                                        </th>
+                                        <th>
+                                            <strong>Certified</strong>
+                                        </th>
+                                        <th>
+                                            <strong>Progress</strong>
+                                        </th>
+                                        <th>
+                                            <strong>Committed</strong>
+                                        </th>
+                                        <th>
+                                            <strong>Budget</strong>
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <!--<tr t-foreach="o.line_ids.filtered(lambda line: line.appears_on_payslip)"-->
-                                    <!--t-as="line">-->
-                                    <td>
-                                        <!--<span t-field="line.code"/>-->
-                                    </td>
-                                    <td>
-                                        <!--<span t-field="line.name"/>-->
-                                    </td>
-                                    <td>
-                                        <!--<span t-field="line.quantity"/>-->
-                                    </td>
-                                    <td>
-                                        <!--<span t-esc="line.amount"-->
-                                        <!--t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>-->
-                                    </td>
-                                    <td>
-                                        <!--<span t-esc="line.total"-->
-                                        <!--t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>-->
-                                    </td>
-
-                                    <!--</tr>-->
+                                    <tr t-foreach="o.job_summary_line" t-as="line">
+                                        <td>
+                                            <span t-field="line.category_id.name"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="line.certified"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="line.progress"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="line.committed"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="line.Budget"/>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
+                            <br/>
+                            <div class="table-responsive">
+                                <table class="o_event_table table table-striped">
+                                    <tr>
+                                        <th>All</th>
+                                        <th colspan="1">All Certified</th>
+                                        <th colspan="1">All Progress</th>
+                                        <th colspan="1">All Committed</th>
+                                        <th colspan="1">All budget</th>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <h4>Expense</h4>
+                                        </td>
+                                        <td>
+                                            <span t-field="o.expense"/>
+                                        </td>
+                                        <td colspan="1">
+                                            <span t-field="o.expense_progress"/>
+                                        </td>
+                                        <td colspan="1">
+                                            <span t-field="o.expense_committed"/>
+                                        </td>
+                                        <td colspan="1">
+                                            <span t-field="o.expense_budget"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <h4>Claim To Date</h4>
 
-                            <p class="text-right">
-                                <strong>Authorized signature</strong>
-                            </p>
+                                        </td>
+                                        <td>
+                                            <span t-field="o.claim_to_date"/>
+                                        </td>
+                                        <td colspan="1">
+                                            <span t-field="o.claim_progress"/>
+                                        </td>
+                                        <td colspan="1">
+                                            <span t-field="o.claim_committed"/>
+                                        </td>
+                                        <td colspan="1">
+                                            <span t-field="o.claim_budget"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <h4>Profit</h4>
+                                        </td>
+                                        <td colspan="1">
+                                            <span t-field="o.profit_certified"/>
+                                        </td>
+                                        <td></td>
+                                        <td>
+                                            <span t-field="o.profit_committed"/>
+                                        </td>
+                                        <td colspan="1">
+                                            <span t-field="o.profit_budget"/>
+                                        </td>
+                                    </tr>
+
+                                </table>
+
+
+                            </div>
+
                         </div>
+
                     </t>
                 </t>
             </t>
-    
         </template>
+
         <report
                 string="Job Report"
                 id="action_report_job_dashboard"

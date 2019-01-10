@@ -1,12 +1,13 @@
-from odoo import models, fields, api
 from datetime import datetime
+
+from odoo import models, fields, api, _
 
 
 class JobsDashboard(models.Model):
     _name = 'jobs.dashboard'
     _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
 
-    @api.depends('award_date','end_date')
+    @api.depends('award_date', 'end_date')
     def _compute_duration(self):
         """
 
@@ -55,7 +56,7 @@ class JobsDashboard(models.Model):
             if job.claim_budget:
                 job.claim_progress = (job.claim_to_date / job.claim_budget) * 100
 
-    @api.depends('claim_budget','claim_to_date','claim_committed','expense','expense_budget','expense_committed')
+    @api.depends('claim_budget', 'claim_to_date', 'claim_committed', 'expense', 'expense_budget', 'expense_committed')
     def _compute_profit(self):
         """
 
@@ -75,16 +76,20 @@ class JobsDashboard(models.Model):
         :return:
         """
         for job in self:
-            job.safety_incidents = len(self.env['jobs.incident.report'].search([("job_code","=",job.id )]))
+            job.safety_incidents = len(self.env['jobs.incident.report'].search([("job_code", "=", job.id)]))
+
+    @api.model
+    def _default_project_type(self):
+        return self.env.user.company_id.project_type
 
     name = fields.Char(string='Job Code', default='New')
 
     project_description = fields.Char(string="Project Description")
     delivery_address = fields.Char(string="Delivery Address")
-    project_type = fields.Char(string="Project Type")
+    project_type = fields.Char(string="Project Type", default=_default_project_type,readonly=True)
 
-    sale_orders = fields.Many2many('sale.order', string='Sale Order')
-    award_date = fields.Date(string='Award Date')
+    sale_orders = fields.One2many('sale.order', 'job_dashboard_id', string='Sale Order')
+    award_date = fields.Date(string='Confirmation Date')
     end_date = fields.Date(string="End Date")
     customer_id = fields.Many2one('res.partner', string='Customer')
     project_manager = fields.Many2one('res.users', string="Project Manager")
@@ -92,11 +97,12 @@ class JobsDashboard(models.Model):
     project_duration = fields.Integer(string="Project Duration(days)", compute=_compute_duration, readonly=True)
     profit_to_date = fields.Integer(string="Profit to Date", readonly=True)
     man_days_worked = fields.Integer(string="Man Days Worked")
-    safety_incidents = fields.Integer(string="Safety Incident",compute=_compute_safety_incidents)
+    safety_incidents = fields.Integer(string="Safety Incident", compute=_compute_safety_incidents)
     last_payment_date = fields.Date(string="Last Payment Day")
 
-    job_summary_line = fields.One2many('job.summary.line', 'job_id', string='Job Summary Line', copy=True, auto_join=True)
-    expense = fields.Integer(string="Expenses", compute =_compute_all, readonly=True)
+    job_summary_line = fields.One2many('job.summary.line', 'job_id', string='Job Summary Line', copy=True,
+                                       auto_join=True)
+    expense = fields.Integer(string="Expenses", compute=_compute_all, readonly=True)
     expense_progress = fields.Integer(string="Progress", compute=_compute_all, readonly=True)
     expense_committed = fields.Integer(string="Committed", compute=_compute_all, readonly=True)
     expense_budget = fields.Integer(string="Budget", compute=_compute_all, readonly=True)
@@ -108,7 +114,7 @@ class JobsDashboard(models.Model):
 
     profit_certified = fields.Integer(compute=_compute_profit, readonly=True)
     profit_committed = fields.Integer(compute=_compute_profit, readonly=True)
-    profit_budget = fields.Integer(compute=_compute_profit,readonly=True)
+    profit_budget = fields.Integer(compute=_compute_profit, readonly=True)
 
     advance_payment_bond = fields.Integer(string="Advance Payment Bond(%)")
     performance_bond = fields.Integer(string="Performance Bond(%)")
@@ -142,7 +148,9 @@ class JobsDashboard(models.Model):
 
         :return:
         """
+
         if self.sale_orders:
+            self.sale_orders[-1].is_job = True
             sale_order = self.sale_orders[0]
             self.customer_id = sale_order.partner_id
             self.delivery_address = sale_order.partner_id.contact_address
@@ -174,7 +182,7 @@ class PurchaseOrder(models.Model):
 class JobSummaryLines(models.Model):
     _name = 'job.summary.line'
 
-    @api.depends('category_id','Budget')
+    @api.depends('category_id', 'Budget')
     def _compute_values(self):
         """
 
@@ -184,7 +192,8 @@ class JobSummaryLines(models.Model):
             if line.category_id:
                 commit_amount = 0
                 certified_amount = 0
-                purchase_orders = self.env['purchase.order'].search([("job_id.name", "=", line.job_id.name),("state",'=',"purchase")])
+                purchase_orders = self.env['purchase.order'].search(
+                    [("job_id.name", "=", line.job_id.name), ("state", '=', "purchase")])
                 for order in purchase_orders:
                     order_lines = order.order_line
                     for ol in order_lines:
@@ -196,10 +205,10 @@ class JobSummaryLines(models.Model):
                 if line.Budget:
                     line.progress = (line.certified / line.Budget) * 100
 
-    job_id = fields.Many2one('jobs.dashboard', string='Job Reference', required=True, ondelete='cascade', index=True, copy=False)
-    category_id = fields.Many2one('product.category', string='Expense Category', required=True)
+    job_id = fields.Many2one('jobs.dashboard', string='Job Reference', required=True, ondelete='cascade', index=True,
+                             copy=False)
+    category_id = fields.Many2one('product.category', string='Expense Details', required=True)
     certified = fields.Integer(string="Certified", compute=_compute_values, readonly=True)
-    progress = fields.Integer(string="Progress",compute=_compute_values, readonly=True)
+    progress = fields.Integer(string="Progress", compute=_compute_values, readonly=True)
     committed = fields.Integer(string="Committed", compute=_compute_values, readonly=True)
     Budget = fields.Integer(string="Budget")
-
