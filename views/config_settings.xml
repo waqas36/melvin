@@ -27,6 +27,19 @@
             <field name="context">{'module' : 'jobs'}</field>
         </record>
 
+            <record model="ir.actions.act_window" id="act_create_project_type">
+            <field name="name">Create Project Type</field>
+            <field name="res_model">create.project.type</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record model="ir.actions.act_window" id="act_create_contract_type">
+            <field name="name">Create Contract Type</field>
+            <field name="res_model">create.contract.type</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
 
         <menuitem id="menu_config_settings"
                   name="Configuration"
@@ -35,6 +48,14 @@
                   name="Settings"
                   parent="menu_config_settings"
                   action="act_config_settings"/>
+        <menuitem id="child_menu_settings"
+                  name="Project Type"
+                  parent="menu_config_settings"
+                  action="act_create_project_type"/>
+        <menuitem id="child_menu_contract_settings"
+                  name="Contract Type"
+                  parent="menu_config_settings"
+                  action="act_create_contract_type"/>
 
 
     </data>

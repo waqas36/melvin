@@ -1,0 +1,7 @@
+<odoo>
+    <data>
+        <record id="manager_rights" model="res.groups">
+            <field name="name">Jobs / Manager</field>
+        </record>
+    </data>
+</odoo>

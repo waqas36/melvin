@@ -8,8 +8,14 @@
             <field name="arch" type="xml">
                 <form string="Jobs">
                     <header>
-                        <button name="action_dispute" class="oe_highlight" type="object" string="A" states="dispute"/>
-                        <button name="action_incident" class="oe_highlight" type="object" string="B" states="incident"/>
+                        <button name="action_dispute" class="oe_highlight" type="object" string="Confirm"
+                                states="dispute" groups="jobs.manager_rights"/>
+                        <button name="action_incident" class="oe_highlight" type="object" string="Validate"
+                                states="incident" groups="jobs.manager_rights"/>
+                        <button name="action_back_to_dispute" class="oe_highlight" type="object"
+                                string="Back To Dispute" states="incident" groups="jobs.manager_rights"/>
+                        <button name="action_back_to_incident" class="oe_highlight" type="object"
+                                string="Back To Incident" states="live" groups="jobs.manager_rights"/>
                         <field name="state" widget="statusbar" statusbar_visible="live,incident,dispute"/>
                     </header>
 
@@ -35,10 +41,28 @@
                             </group>
                         </group>
                         <notebook>
-                            <page string="Job Performance">
+                            <page string="Summary">
+
                                 <group>
-                                    <field name="claim_progress" string="Claim Progress"/>
-                                    <field name="expense_progress" string="Work Progress"/>
+                                    <div name="claim_progress">
+
+                                        <label for="claim_progress" style="font-weight: bold"/>
+
+                                        <field name="claim_progress" class="oe_inline"/>
+                                        %
+
+                                    </div>
+                                    <div name="expense_progress">
+
+                                        <label for="expense_progress" style="font-weight: bold"/>
+
+                                        <field name="expense_progress" class="oe_inline"/>
+                                        %
+
+                                    </div>
+
+                                    <!--<field name="claim_progress" string="Claim Progress"/>-->
+                                    <!--<field name="expense_progress" string="Work Progress"/>-->
                                     <field name="profit_to_date" string="Profit to Date"/>
                                     <field name="man_days_worked"/>
                                     <field name="safety_incidents"/>
@@ -46,7 +70,7 @@
                                 </group>
 
                             </page>
-                            <page string="Actual Tab">
+                            <page string="Performance">
 
                                 <!--<group  col="8" >-->
                                 <!--<field name="expense" colspan="6"/>-->
@@ -56,43 +80,38 @@
                                 <!--</group>-->
 
 
-                                <field name="job_summary_line" mode="tree,kanban" >
+                                <field name="job_summary_line" mode="tree,kanban">
                                     <form string="Job Summary">
                                         <group>
                                             <group>
 
                                                 <field name="category_id" force_save="1"/>
-                                                <field name="certified" />
-                                                <field name="progress" />
-                                                <field name="committed" />
-                                                <field name="Budget" />
-
+                                                <field name="certified"/>
+                                                <field name="progress"/>
+                                                <field name="committed"/>
+                                                <field name="Budget"/>
 
 
                                             </group>
                                         </group>
 
                                     </form>
-                                    <tree string="Job Summary Lines" editable="bottom" >
+                                    <tree string="Job Summary Lines" editable="bottom">
 
                                         <field name="category_id" force_save="1"/>
-                                        <field name="certified" />
-                                        <field name="progress" />
-                                        <field name="committed" />
-                                        <field name="Budget" />
+                                        <field name="certified"/>
+                                        <field name="progress"/>
+                                        <field name="committed"/>
+                                        <field name="Budget"/>
 
 
-
-
-
-
-                                </tree>
+                                    </tree>
                                     <kanban class="o_kanban_mobile">
-                                        <field name="category_id" />
-                                        <field name="certified" />
-                                        <field name="progress" />
-                                        <field name="committed" />
-                                        <field name="Budget" />
+                                        <field name="category_id"/>
+                                        <field name="certified"/>
+                                        <field name="progress"/>
+                                        <field name="committed"/>
+                                        <field name="Budget"/>
 
                                         <!--<field name="product_id"/>-->
                                         <!--<field name="product_uom_qty"/>-->
@@ -104,13 +123,19 @@
                                                 <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                                                     <div class="row">
                                                         <div class="col-xs-8">
-                                                            <strong><span><t t-esc="record.category_id.value"/></span></strong>
+                                                            <strong>
+                                                                <span>
+                                                                    <t t-esc="record.category_id.value"/>
+                                                                </span>
+                                                            </strong>
                                                         </div>
                                                         <div class="col-xs-4">
-                                                            <strong><span class="pull-right text-right">
-                                                                <!--<t t-esc="record.price_subtotal.value"/>-->
+                                                            <strong>
+                                                                <span class="pull-right text-right">
+                                                                    <!--<t t-esc="record.price_subtotal.value"/>-->
 
-                                                            </span></strong>
+                                                                </span>
+                                                            </strong>
                                                         </div>
                                                     </div>
                                                     <div class="row">
@@ -132,48 +157,52 @@
                                         </templates>
                                     </kanban>
                                 </field>
-                                <group class="oe_footer" col="12"  >
-                                    <label string="Summary" colspan="4" />
-                                    <label string="All Certified" style="text-align: right;" colspan="2" />
-                                    <label string="All Progress" style="text-align: right;" colspan="2" />
-                                    <label string="All Committed" style="text-align: right;" colspan="2" />
-                                    <label string="All Budget" style="text-align: right;" colspan="2" />
+                                <group class="oe_footer" col="12">
+                                    <label string="Summary" colspan="4"/>
+                                    <label string="Certified" style="text-align: right;" colspan="2"/>
+                                    <label string="Progress" style="text-align: right;" colspan="2"/>
+                                    <label string="Committed" style="text-align: right;" colspan="2"/>
+                                    <label string="Budget" style="text-align: right;" colspan="2"/>
 
                                 </group>
-                                <group class="oe_footer" col="12"  >
-                                    <label for="expense" string="Expense" colspan="4" />
-                                    <field name="expense" nolabel="1" style="text-align: right;" colspan="2" />
-                                    <field name="expense_progress" nolabel="1" style="text-align: right; " colspan="2" />
-                                    <field name="expense_committed" nolabel="1" style="text-align: right; " colspan="2" />
-                                    <field name="expense_budget" nolabel="1"  style="text-align: right;" colspan="2" />
+                                <group class="oe_footer" col="12">
+                                    <label for="expense" string="Cost of Sales" colspan="4"/>
+                                    <field name="expense" nolabel="1" style="text-align: right;" colspan="2"/>
+                                    <field name="expense_progress" nolabel="1" style="text-align: right; " colspan="2"/>
+                                    <field name="expense_committed" nolabel="1" style="text-align: right; "
+                                           colspan="2"/>
+                                    <field name="expense_budget" nolabel="1" style="text-align: right;" colspan="2"/>
                                 </group>
-                                <group class="oe_footer" col="12"  >
-                                    <label for="claim_to_date" string="Sales" colspan="4" />
-                                    <field name="claim_to_date" nolabel="1" style="text-align: right;" colspan="2" />
-                                    <field name="claim_progress" nolabel="1" style="text-align: right; " colspan="2" />
-                                    <field name="claim_committed" nolabel="1" style="text-align: right; " colspan="2" />
-                                    <field name="claim_budget" nolabel="1"  style="text-align: right;" colspan="2" />
+                                <group class="oe_footer" col="12">
+                                    <label for="claim_to_date" string="Revenue" colspan="4"/>
+                                    <field name="claim_to_date" nolabel="1" style="text-align: right;" colspan="2"/>
+                                    <field name="claim_progress" nolabel="1" style="text-align: right; " colspan="2"/>
+                                    <field name="claim_committed" nolabel="1" style="text-align: right; " colspan="2"/>
+                                    <field name="claim_budget" nolabel="1" style="text-align: right;" colspan="2"/>
                                 </group>
-                                <group class="oe_footer" col="12"  >
-                                    <label  string="Profit" colspan="4" />
+                                <group class="oe_footer" col="12">
+                                    <label string="Profit" colspan="4"/>
 
-                                    <field name="profit_certified" nolabel="1" style="text-align: right; " colspan="4" />
-                                    <field name="profit_committed" nolabel="1" style="text-align: right; " colspan="2" />
-                                    <field name="profit_budget" nolabel="1"  style="text-align: right;" colspan="2" />
+                                    <field name="profit_certified" nolabel="1" style="text-align: right; " colspan="4"/>
+                                    <field name="profit_committed" nolabel="1" style="text-align: right; " colspan="2"/>
+                                    <field name="profit_budget" nolabel="1" style="text-align: right;" colspan="2"/>
                                 </group>
-
 
 
                             </page>
-                            <page string="Contact Details">
+                            <page string="Contract Details">
                                 <group col="4">
+
                                     <field name="sale_orders" widget="many2many_tags"/>
-                                    <field name="contract_value"/>
+                                    <field name="advance_payment_bond"/>
                                     <field name="currency_id"/>
-                                    <field name="confirmation_date"/>
+
+                                    <field name="contract_value"/>
                                     <field name="award_date" string="Start date"/>
+                                    <field name="confirmation_date"/>
+                                    <field name="contract_type"/>
+
                                     <field name="end_date"/>
-                                    <field name="advance_payment_bond" />
                                     <field name="dlp_duration"/>
                                     <field name="ld_max"/>
 
@@ -182,7 +211,6 @@
                                     <field name="retention"/>
 
                                 </group>
-
 
 
                             </page>
@@ -206,7 +234,7 @@
             <field name="arch" type="xml">
                 <tree colors="color_field: red_color,orange_color,green_color">
                     <field name="name"/>
-                    <field name="sale_orders"/>
+                    <!--<field name="sale_orders"/>-->
                     <field name="award_date"/>
                     <field name="end_date"/>
                     <field name="customer_id"/>
@@ -240,6 +268,7 @@
                   parent="root_menu_item_job"/>
         <menuitem id="child_menu_job_dashboard"
                   name="Job"
+                  sequence="30"
                   parent="menu_job_dashboard"
                   action="act_job_dashboard"/>
     </data>

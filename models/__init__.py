@@ -6,4 +6,5 @@ from . import jobs
 from . import job_dashboard
 from . import config_settings
 from . import sale_order
+from . import account_invoice
 

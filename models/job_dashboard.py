@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from odoo import models, fields, api, _
+from odoo import models, fields, api
 
 
 class JobsDashboard(models.Model):
@@ -80,19 +80,26 @@ class JobsDashboard(models.Model):
 
     @api.model
     def _default_project_type(self):
-        return self.env.user.company_id.project_type
+        obj = self.env['create.project.type'].search([('name', '=', self.env.user.company_id.project_type)])
+        temp = True
+        for rec in obj:
+            if rec.name == self.env.user.company_id.project_type:
+                temp = False
+
+        if temp == True:
+            return self.env['create.project.type'].create({'name': self.env.user.company_id.project_type})
 
     name = fields.Char(string='Job Code', default='New')
-
-    project_description = fields.Char(string="Project Description")
+    project_description = fields.Text(string="Job Description")
     delivery_address = fields.Char(string="Delivery Address")
-    project_type = fields.Char(string="Project Type", default=_default_project_type,readonly=True)
+    project_type = fields.Many2one('create.project.type', string="Project Type", default=_default_project_type)
 
     sale_orders = fields.One2many('sale.order', 'job_dashboard_id', string='Sale Order')
     award_date = fields.Date(string='Confirmation Date')
     end_date = fields.Date(string="End Date")
     customer_id = fields.Many2one('res.partner', string='Customer')
     project_manager = fields.Many2one('res.users', string="Project Manager")
+    contract_type = fields.Many2one('create.contract.type', string="Contract Type")
 
     project_duration = fields.Integer(string="Project Duration(days)", compute=_compute_duration, readonly=True)
     profit_to_date = fields.Integer(string="Profit to Date", readonly=True)
@@ -102,13 +109,13 @@ class JobsDashboard(models.Model):
 
     job_summary_line = fields.One2many('job.summary.line', 'job_id', string='Job Summary Line', copy=True,
                                        auto_join=True)
-    expense = fields.Integer(string="Expenses", compute=_compute_all, readonly=True)
-    expense_progress = fields.Integer(string="Progress", compute=_compute_all, readonly=True)
+    expense = fields.Integer(string="Cost of Sales", compute=_compute_all, readonly=True)
+    expense_progress = fields.Integer(string="Work Progress :", compute=_compute_all, readonly=True)
     expense_committed = fields.Integer(string="Committed", compute=_compute_all, readonly=True)
     expense_budget = fields.Integer(string="Budget", compute=_compute_all, readonly=True)
 
     claim_to_date = fields.Integer(string="Claim to Date", compute=_compute_claim, readonly=True)
-    claim_progress = fields.Integer(string="Progress", compute=_compute_claim, readonly=True)
+    claim_progress = fields.Integer(string="Claim Progress :", compute=_compute_claim, readonly=True)
     claim_committed = fields.Integer(string="Committed", compute=_compute_claim, readonly=True)
     claim_budget = fields.Integer(string="Budget")
 
@@ -120,7 +127,7 @@ class JobsDashboard(models.Model):
     performance_bond = fields.Integer(string="Performance Bond(%)")
     dlp_duration = fields.Integer(string="DLP Duration(Mth)")
     ld_max = fields.Integer(string="LD Max")
-    ld_rate = fields.Integer(string="LD Rate")
+    ld_rate = fields.Char(string="LD Rate")
     consequence_damages = fields.Boolean(string="Consequential Damages")
     retention = fields.Integer(string="Retention")
     confirmation_date = fields.Date(string="Confirmation Date")
@@ -129,12 +136,18 @@ class JobsDashboard(models.Model):
 
     sale_order_id = fields.Many2many('sale.order', string='Sale Order')
 
-    status = fields.Selection([('live', 'Live')], default='live', readonly=True)
+    status = fields.Selection([('dispute', 'Dispute'), ('incident', 'Incident'), ('live', 'Live')], default='dispute',
+                              readonly=True, compute='_on_change_state')
     state = fields.Selection([('dispute', 'Dispute'), ('incident', 'Incident'), ('live', 'Live')], string='State',
                              default='dispute')
     green_color = fields.Boolean(default=False)
     orange_color = fields.Boolean(default=False)
     red_color = fields.Boolean(default=True)
+
+    @api.depends('state')
+    def _on_change_state(self):
+        for rec in self:
+            rec.status = rec.state
 
     @api.model
     def create(self, vals):
@@ -164,14 +177,26 @@ class JobsDashboard(models.Model):
     @api.multi
     def action_dispute(self):
         self.state = 'incident'
-        self.red_color = False
         self.orange_color = True
+        self.red_color = False
 
     @api.multi
     def action_incident(self):
         self.state = 'live'
-        self.orange_color = False
         self.green_color = True
+        self.orange_color = False
+
+    @api.multi
+    def action_back_to_dispute(self):
+        self.state = 'dispute'
+        self.orange_color = False
+        self.red_color = True
+
+    @api.multi
+    def action_back_to_incident(self):
+        self.state = 'incident'
+        self.green_color = False
+        self.orange_color = True
 
 
 class PurchaseOrder(models.Model):
@@ -212,3 +237,15 @@ class JobSummaryLines(models.Model):
     progress = fields.Integer(string="Progress", compute=_compute_values, readonly=True)
     committed = fields.Integer(string="Committed", compute=_compute_values, readonly=True)
     Budget = fields.Integer(string="Budget")
+
+
+class CreateProjectType(models.Model):
+    _name = 'create.project.type'
+
+    name = fields.Char("Project Type")
+
+
+class CreateContractType(models.Model):
+    _name = 'create.contract.type'
+
+    name = fields.Char("Contract Type")
