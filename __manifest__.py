@@ -38,6 +38,8 @@
         'views/sale_order.xml',
         'views/jobs_dashboard.xml',
         'views/config_settings.xml',
+        'views/account_invoice.xml',
+        'data/group.xml',
         'report/job_incident_report.xml',
         'report/job_report.xml',
     ],

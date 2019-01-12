@@ -116,10 +116,10 @@
                                 <table class="o_event_table table table-striped">
                                     <tr>
                                         <th>All</th>
-                                        <th colspan="1">All Certified</th>
-                                        <th colspan="1">All Progress</th>
-                                        <th colspan="1">All Committed</th>
-                                        <th colspan="1">All budget</th>
+                                        <th colspan="1">Certified</th>
+                                        <th colspan="1">Progress</th>
+                                        <th colspan="1">Committed</th>
+                                        <th colspan="1">budget</th>
                                     </tr>
                                     <tr>
                                         <td>
