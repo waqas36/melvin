@@ -12,6 +12,18 @@
 
             </field>
         </record>
+        <record model="ir.ui.view" id="invoice_supplier_form_inherit">
+            <field name="name">account_invoice_supplier_form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+
+                <field name="purchase_id" position="after">
+                    <field name="project_code"/>
+                </field>
+
+            </field>
+        </record>
     </data>
 
 </odoo>

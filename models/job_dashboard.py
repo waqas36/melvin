@@ -17,6 +17,21 @@ class JobsDashboard(models.Model):
             date = datetime.strptime(self.end_date, "%Y-%m-%d") - datetime.strptime(self.award_date, "%Y-%m-%d")
             self.project_duration = date.days
 
+    @api.depends('sale_orders')
+    def _get_last_date(self):
+        """
+
+        :return:
+        """
+        payment_date_list = []
+        for order in self.env['sale.order'].search([]):
+            for invoice in order.invoice_ids:
+                payments = self.env['account.payment'].search([('communication', '=', invoice.number)])
+                if payments:
+                    payment_date_list.append(payments[0].payment_date)
+        if payment_date_list:
+            self.last_payment_date = max(payment_date_list)
+
     @api.depends('job_summary_line.certified', 'expense_budget')
     def _compute_all(self):
         """
@@ -79,23 +94,23 @@ class JobsDashboard(models.Model):
         for job in self:
             job.safety_incidents = len(self.env['jobs.incident.report'].search([("job_code", "=", job.id)]))
 
-    @api.model
-    def _default_project_type(self):
-        obj = self.env['create.project.type'].search([('name', '=', self.env.user.company_id.project_type)])
-        temp = True
-        for rec in obj:
-            if rec.name == self.env.user.company_id.project_type:
-                temp = False
-
-        if temp == True:
-            return self.env['create.project.type'].create({'name': self.env.user.company_id.project_type})
+    # @api.model
+    # def _default_project_type(self):
+    #     obj = self.env['create.project.type'].search([('name', '=', self.env.user.company_id.project_type)])
+    #     temp = True
+    #     for rec in obj:
+    #         if rec.name == self.env.user.company_id.project_type:
+    #             temp = False
+    #
+    #     if temp == True:
+    #         return self.env['create.project.type'].create({'name': self.env.user.company_id.project_type})
 
     payment_terms = fields.Text('Payment Terms')
     notes = fields.Text('Notes')
     name = fields.Char(string='Job Code', default='New')
     project_description = fields.Text(string="Job Description")
     delivery_address = fields.Char(string="Delivery Address")
-    project_type = fields.Many2one('create.project.type', string="Project Type", default=_default_project_type)
+    project_type = fields.Many2one('create.project.type', string="Project Type")
 
     sale_orders = fields.One2many('sale.order', 'job_dashboard_id', string='Sale Order')
     award_date = fields.Date(string='Confirmation Date')
@@ -108,7 +123,7 @@ class JobsDashboard(models.Model):
     profit_to_date = fields.Integer(string="Profit to Date", readonly=True)
     man_days_worked = fields.Integer(string="Man Days Worked")
     safety_incidents = fields.Integer(string="Safety Incident", compute=_compute_safety_incidents)
-    last_payment_date = fields.Date(string="Last Payment Day")
+    last_payment_date = fields.Date(string="Last Payment Day",compute=_get_last_date)
 
     job_summary_line = fields.One2many('job.summary.line', 'job_id', string='Job Summary Line', copy=True,
                                        auto_join=True)

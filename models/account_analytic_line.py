@@ -18,7 +18,7 @@ class AccountAnalyticLineExt(models.Model):
     company = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
     remarks = fields.Text(string="Remarks")
     hour_worked = fields.Char("Hours Worked")
-    account_id = fields.Many2one('account.analytic.account', 'Analytic Account')
+    account_id = fields.Many2one('account.analytic.account', 'Analytic Account', ondelete='restrict', index=True)
     project_id = fields.Many2one('project.project', 'Project', domain=[('allow_timesheets', '=', True)])
 
     @api.onchange('time_start', 'time_end')
