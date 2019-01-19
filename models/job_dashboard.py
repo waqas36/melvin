@@ -93,16 +93,16 @@ class JobsDashboard(models.Model):
         for job in self:
             job.safety_incidents = len(self.env['jobs.incident.report'].search([("job_code", "=", job.id)]))
 
-    # @api.model
-    # def _default_project_type(self):
-    #     obj = self.env['create.project.type'].search([('name', '=', self.env.user.company_id.project_type)])
-    #     temp = True
-    #     for rec in obj:
-    #         if rec.name == self.env.user.company_id.project_type:
-    #             temp = False
-    #
-    #     if temp == True:
-    #         return self.env['create.project.type'].create({'name': self.env.user.company_id.project_type})
+    def _work_hours(self):
+        """
+
+        :return:
+        """
+        worked_hours = 0
+        time_sheets = self.env["account.analytic.line"].search([("job_id", "=", self.id)])
+        for sheet in time_sheets:
+            worked_hours = worked_hours + sheet.hour_worked
+        self.man_days_worked = worked_hours
 
     payment_terms = fields.Text('Payment Terms')
     notes = fields.Text('Notes')
@@ -120,7 +120,7 @@ class JobsDashboard(models.Model):
 
     project_duration = fields.Integer(string="Project Duration(days)", compute=_compute_duration, readonly=True)
     profit_to_date = fields.Integer(string="Profit to Date", readonly=True)
-    man_days_worked = fields.Integer(string="Man Days Worked")
+    man_days_worked = fields.Integer(string="Work Hours",readonly=True,compute=_work_hours)
     safety_incidents = fields.Integer(string="Safety Incident", compute=_compute_safety_incidents)
     last_payment_date = fields.Date(string="Last Payment Day",compute=_get_last_date)
 
