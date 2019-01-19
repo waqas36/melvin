@@ -24,9 +24,9 @@
                 <!--</field>-->
 
                 <xpath expr="//form/sheet/group/group[2]" position="inside">
-                    <field name="time_start" widget="float_time"/>
-                    <field name="time_end" widget="float_time"/>
-                    <field name="hour_worked"/>
+                    <field name="time_start" widget="timepicker"/>
+                    <field name="time_end" widget="timepicker"/>
+                    <field name="hour_worked" readonly="True"   />
                     <field name="rate"/>
                     <field name="charges"/>
                     <field name="remarks"/>

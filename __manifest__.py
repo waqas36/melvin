@@ -21,6 +21,8 @@
 
     # any module necessary for this one to work correctly
     'depends': ['base', 'sale_management','hr_timesheet', 'purchase'],
+    'qweb': ["static/src/xml/*.xml"],
+
     "images": [
         "static/description/job.png"
     ],
@@ -28,15 +30,17 @@
     # always loaded
     'data': [
         # 'security/ir.model.access.csv',
+        'views/jobs.xml',
+        'views/jobs_dashboard.xml',
         'views/views.xml',
         'views/templates.xml',
         'views/account_analytic_line.xml',
-        'views/jobs.xml',
+
         'views/sequence.xml',
         'views/purchase_order.xml',
         'views/web_tree_dynamic_colored_field.xml',
         'views/sale_order.xml',
-        'views/jobs_dashboard.xml',
+
         'views/config_settings.xml',
         'views/account_invoice.xml',
         'data/group.xml',

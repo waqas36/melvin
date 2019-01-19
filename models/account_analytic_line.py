@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import datetime
 
 from odoo import models, fields, api
 
@@ -10,17 +11,20 @@ class AccountAnalyticLineExt(models.Model):
     # employee_code = fields.Char(string="Employee Code")
     name = fields.Many2one('jobs.dashboard', string='Job Code')
     charges = fields.Float(string="Charges to Job")
-    time_start = fields.Float('Time Start')
-    time_end = fields.Float('Time End')
+    time_start = fields.Char('Time Start')
+    time_end = fields.Char('Time End')
     rate = fields.Char(string="Rate ($/hr)")
     supervisor = fields.Char(string="Supervisor")
     company = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
     remarks = fields.Text(string="Remarks")
-    hour_worked = fields.Float("Hours Worked")
+    hour_worked = fields.Char("Hours Worked")
     account_id = fields.Many2one('account.analytic.account', 'Analytic Account')
     project_id = fields.Many2one('project.project', 'Project', domain=[('allow_timesheets', '=', True)])
 
-    @api.onchange('time_end')
+    @api.onchange('time_start', 'time_end')
     def get_hours(self):
-        if self.time_end > self.time_start:
-            self.hour_worked = self.time_end - self.time_start
+        if self.time_start and self.time_end:
+            time_start = datetime.datetime.strptime(self.time_start.replace(' ', ''), '%H:%M')
+            time_end = datetime.datetime.strptime(self.time_end.replace(' ', ''), '%H:%M')
+            if time_end > time_start:
+                self.hour_worked = str(time_end - time_start)

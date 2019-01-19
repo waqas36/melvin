@@ -209,6 +209,8 @@
                                     <field name="ld_rate"/>
                                     <field name="consequence_damages"/>
                                     <field name="retention"/>
+                                    <field name="payment_terms"/>
+                                    <field name="notes"/>
 
                                 </group>
 
@@ -262,13 +264,8 @@
                 </p>
             </field>
         </record>
-
-        <menuitem id="menu_job_dashboard"
-                  name="Dashboard"
-                  parent="root_menu_item_job"/>
         <menuitem id="child_menu_job_dashboard"
                   name="Job"
-                  sequence="30"
                   parent="menu_job_dashboard"
                   action="act_job_dashboard"/>
     </data>

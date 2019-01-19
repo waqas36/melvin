@@ -89,6 +89,8 @@ class JobsDashboard(models.Model):
         if temp == True:
             return self.env['create.project.type'].create({'name': self.env.user.company_id.project_type})
 
+    payment_terms = fields.Text('Payment Terms')
+    notes = fields.Text('Notes')
     name = fields.Char(string='Job Code', default='New')
     project_description = fields.Text(string="Job Description")
     delivery_address = fields.Char(string="Delivery Address")
@@ -134,7 +136,7 @@ class JobsDashboard(models.Model):
     contract_value = fields.Integer(string="Contract Value")
     currency_id = fields.Many2one("res.currency", string="Currency")
 
-    sale_order_id = fields.Many2many('sale.order', string='Sale Order')
+    # sale_order_id = fields.Many2many('sale.order', string='Sale Order')
 
     status = fields.Selection([('dispute', 'Dispute'), ('incident', 'Incident'), ('live', 'Live')], default='dispute',
                               readonly=True, compute='_on_change_state')

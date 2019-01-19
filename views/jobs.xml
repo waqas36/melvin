@@ -56,14 +56,18 @@
 
         <menuitem id="root_menu_item_job"
                   web_icon="jobs,static/description/icon.png"
-
                   name="Jobs"/>
+        <menuitem id="menu_job_dashboard"
+                  name="Dashboard"
+                  parent="root_menu_item_job"/>
         <menuitem id="child_menu_incident_report"
                   name="Incident Report"
-                  parent="jobs.menu_job_dashboard"
+                  parent="menu_job_dashboard"
                   action="act_job_incident_report"
-                  sequence="100"
         />
+
+
+
 
     </data>
 
