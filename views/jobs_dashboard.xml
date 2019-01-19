@@ -1,6 +1,21 @@
 <odoo>
 
     <data>
+        <record model="ir.ui.view" id="jobs_search_view">
+            <field name="name">Jobs Dashboard search</field>
+            <field name="model">jobs.dashboard</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="project_description"/>
+                    <field name="sale_orders"/>
+                    <field name="customer_id"/>
+                    <!--<group string="Group By">-->
+                    <!--<filter name="by_responsible" string="Responsible" context="{'group_by': 'responsible_id'}"/>-->
+                    <!--</group>-->
+                </search>
+            </field>
+        </record>
 
         <record id="job_dashboard_form" model="ir.ui.view">
             <field name="name">Jobs Dashboard Form</field>
@@ -16,8 +31,15 @@
                                 string="Back To Dispute" states="incident" groups="jobs.manager_rights"/>
                         <button name="action_back_to_incident" class="oe_highlight" type="object"
                                 string="Back To Incident" states="live" groups="jobs.manager_rights"/>
+
+
                         <field name="state" widget="statusbar" statusbar_visible="live,incident,dispute"/>
                     </header>
+                    <div class="text-center">
+                        <label string="Contract Value : "/>
+                        <field name="contract_value" readonly="True" class="oe_inline"/>
+
+                    </div>
 
                     <sheet string="Jobs Entry">
                         <div class="oe_title">
@@ -42,24 +64,27 @@
                         </group>
                         <notebook>
                             <page string="Summary">
-
                                 <group>
-                                    <div name="claim_progress">
+                                    <group>
+                                        <div name="claim_progress">
 
-                                        <label for="claim_progress" style="font-weight: bold"/>
+                                            <label for="claim_progress" style="font-weight: bold"/>
 
-                                        <field name="claim_progress" class="oe_inline"/>
-                                        %
+                                            <field name="claim_progress" class="oe_inline"/>
+                                            %
 
-                                    </div>
-                                    <div name="expense_progress">
+                                        </div>
+                                        <div name="expense_progress">
 
-                                        <label for="expense_progress" style="font-weight: bold"/>
+                                            <label for="expense_progress" style="font-weight: bold"/>
 
-                                        <field name="expense_progress" class="oe_inline"/>
-                                        %
+                                            <field name="expense_progress" class="oe_inline"/>
+                                            %
 
-                                    </div>
+                                        </div>
+                                    </group>
+                                    <br/>
+                                    <group>
 
                                     <!--<field name="claim_progress" string="Claim Progress"/>-->
                                     <!--<field name="expense_progress" string="Work Progress"/>-->
@@ -67,6 +92,7 @@
                                     <field name="man_days_worked"/>
                                     <field name="safety_incidents"/>
                                     <field name="last_payment_date"/>
+                                        </group>
                                 </group>
 
                             </page>
@@ -197,7 +223,7 @@
                                     <field name="advance_payment_bond"/>
                                     <field name="currency_id"/>
 
-                                    <field name="contract_value"/>
+                                    <!--<field name="contract_value"/>-->
                                     <field name="award_date" string="Start date"/>
                                     <field name="confirmation_date"/>
                                     <field name="contract_type"/>
@@ -267,7 +293,9 @@
         <menuitem id="child_menu_job_dashboard"
                   name="Job"
                   parent="menu_job_dashboard"
-                  action="act_job_dashboard"/>
+                  action="act_job_dashboard"
+                  sequence="5"
+        />
     </data>
 
 </odoo>
