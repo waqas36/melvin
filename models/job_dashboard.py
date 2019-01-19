@@ -17,25 +17,26 @@ class JobsDashboard(models.Model):
             date = datetime.strptime(self.end_date, "%Y-%m-%d") - datetime.strptime(self.award_date, "%Y-%m-%d")
             self.project_duration = date.days
 
-    @api.depends('job_summary_line.certified')
+    @api.depends('job_summary_line.certified', 'expense_budget')
     def _compute_all(self):
         """
 
         :return:
         """
         for job in self:
-            expense = 0
-            progress = 0
-            committed = 0
-            budget = 0
-            for line in job.job_summary_line:
-                expense = expense + line.certified
-                committed = committed + line.committed
-                budget = budget + line.Budget
-            job.expense = expense
-            job.expense_progress = 0
-            job.expense_committed = committed
-            job.expense_budget = budget
+            purchase_orders = self.env["purchase.order"].search([("job_id", '=', job.id),('state', 'in', ['purchase', 'done'])])
+            if purchase_orders:
+                expense = 0
+                committed = 0
+                for po in purchase_orders:
+                    committed = committed + po.amount_total
+                    for vendor_bill in po.invoice_ids:
+                        if vendor_bill.state == "paid":
+                            expense = expense + vendor_bill.amount_total
+                job.expense = expense
+                job.expense_committed = committed
+            if job.expense_budget:
+                job.expense_progress =(job.expense / job.expense_budget) * 100
 
     @api.depends('claim_budget')
     def _compute_claim(self):
@@ -114,7 +115,7 @@ class JobsDashboard(models.Model):
     expense = fields.Integer(string="Cost of Sales", compute=_compute_all, readonly=True)
     expense_progress = fields.Integer(string="Work Progress :", compute=_compute_all, readonly=True)
     expense_committed = fields.Integer(string="Committed", compute=_compute_all, readonly=True)
-    expense_budget = fields.Integer(string="Budget", compute=_compute_all, readonly=True)
+    expense_budget = fields.Integer(string="Budget",)
 
     claim_to_date = fields.Integer(string="Claim to Date", compute=_compute_claim, readonly=True)
     claim_progress = fields.Integer(string="Claim Progress :", compute=_compute_claim, readonly=True)

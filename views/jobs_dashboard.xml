@@ -87,9 +87,9 @@
 
                                                 <field name="category_id" force_save="1"/>
                                                 <field name="certified"/>
-                                                <field name="progress"/>
+                                                <!--<field name="progress"/>-->
                                                 <field name="committed"/>
-                                                <field name="Budget"/>
+                                                <!--<field name="Budget"/>-->
 
 
                                             </group>
@@ -100,18 +100,18 @@
 
                                         <field name="category_id" force_save="1"/>
                                         <field name="certified"/>
-                                        <field name="progress"/>
+                                        <!--<field name="progress"/>-->
                                         <field name="committed"/>
-                                        <field name="Budget"/>
+                                        <!--<field name="Budget"/>-->
 
 
                                     </tree>
                                     <kanban class="o_kanban_mobile">
                                         <field name="category_id"/>
                                         <field name="certified"/>
-                                        <field name="progress"/>
+                                        <!--<field name="progress"/>-->
                                         <field name="committed"/>
-                                        <field name="Budget"/>
+                                        <!--<field name="Budget"/>-->
 
                                         <!--<field name="product_id"/>-->
                                         <!--<field name="product_uom_qty"/>-->
