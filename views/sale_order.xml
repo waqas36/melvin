@@ -13,7 +13,7 @@
                 </xpath>
                 <xpath expr="//button[@name='action_cancel']" position="after">
                     <field name="job_dashboard_id" />
-                    <field name="is_job" />
+                    <!--<field name="is_job" />-->
                 </xpath>
             </field>
         </record>
