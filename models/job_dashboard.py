@@ -94,16 +94,18 @@ class JobsDashboard(models.Model):
         for job in self:
             job.safety_incidents = len(self.env['jobs.incident.report'].search([("job_code", "=", job.id)]))
 
+    @api.multi
     def _work_hours(self):
         """
 
         :return:
         """
-        worked_hours = 0
-        time_sheets = self.env["account.analytic.line"].search([("job_id", "=", self.id)])
-        for sheet in time_sheets:
-            worked_hours = worked_hours + sheet.hour_worked
-        self.man_days_worked = worked_hours
+        for job in self:
+            worked_hours = 0
+            time_sheets = self.env["account.analytic.line"].search([("job_id", "=", job.id)])
+            for sheet in time_sheets:
+                worked_hours = worked_hours + sheet.hour_worked
+            job.man_days_worked = worked_hours
 
     payment_terms = fields.Text('Payment Terms')
     notes = fields.Text('Notes')

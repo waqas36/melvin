@@ -16,9 +16,9 @@
                 <field name="unit_amount" position="attributes">
                     <attribute name="invisible">True</attribute>
                 </field>
-                <field name="project_id" position="attributes">
-                    <attribute name="required">False</attribute>
-                </field>
+                <!--<field name="project_id" position="attributes">-->
+                    <!--<attribute name="required">False</attribute>-->
+                <!--</field>-->
                 <!--<field name="account_id" position="attributes">-->
                     <!--<attribute name="required">False</attribute>-->
                 <!--</field>-->

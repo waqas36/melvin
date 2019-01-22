@@ -9,13 +9,14 @@ class AccountAnalyticLineExt(models.Model):
 
     @api.depends('time_start', 'time_end')
     def _get_hours(self):
-        if self.time_start and self.time_end:
-            # time_start = datetime.datetime.strptime(str(self.time_start), '%H:%M')
-            # time_end = datetime.datetime.strptime(str(self.time_end), '%H:%M')
-            if self.time_end >= self.time_start:
-                self.hour_worked = self.time_end - self.time_start
-            else:
-                raise Warning(_("End Time should be greater than Start Time"))
+        for obj in self:
+            if obj.time_start and obj.time_end:
+                # time_start = datetime.datetime.strptime(str(self.time_start), '%H:%M')
+                # time_end = datetime.datetime.strptime(str(self.time_end), '%H:%M')
+                if obj.time_end >= obj.time_start:
+                    obj.hour_worked = obj.time_end - obj.time_start
+                else:
+                    raise Warning(_("End Time should be greater than Start Time"))
 
     employee_id = fields.Many2one('hr.employee', string="Employee")
     # employee_code = fields.Char(string="Employee Code")
