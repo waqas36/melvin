@@ -35,11 +35,11 @@
 
                         <field name="state" widget="statusbar" statusbar_visible="live,incident,dispute"/>
                     </header>
-                    <div class="text-center">
-                        <label string="Contract Value : "/>
-                        <field name="contract_value" readonly="True" class="oe_inline"/>
+                    <!--<div class="text-center">-->
+                        <!--<label string="Contract Value : "/>-->
+                        <!--<field name="contract_value" readonly="True" class="oe_inline"/>-->
 
-                    </div>
+                    <!--</div>-->
 
                     <sheet string="Jobs Entry">
                         <div class="oe_title">
@@ -51,6 +51,7 @@
                         <group>
                             <group>
                                 <field name="project_description"/>
+                                <field name="contract_value" readonly="True"/>
                                 <field name="customer_id"/>
                                 <field name="delivery_address"/>
                                 <field name="project_type"/>
@@ -86,13 +87,13 @@
                                     <br/>
                                     <group>
 
-                                    <!--<field name="claim_progress" string="Claim Progress"/>-->
-                                    <!--<field name="expense_progress" string="Work Progress"/>-->
-                                    <field name="profit_to_date" string="Profit to Date"/>
-                                    <field name="man_days_worked"/>
-                                    <field name="safety_incidents"/>
-                                    <field name="last_payment_date"/>
-                                        </group>
+                                        <!--<field name="claim_progress" string="Claim Progress"/>-->
+                                        <!--<field name="expense_progress" string="Work Progress"/>-->
+                                        <field name="profit_to_date" string="Profit to Date"/>
+                                        <field name="man_days_worked"/>
+                                        <field name="safety_incidents"/>
+                                        <field name="last_payment_date"/>
+                                    </group>
                                 </group>
 
                             </page>
@@ -192,6 +193,13 @@
 
                                 </group>
                                 <group class="oe_footer" col="12">
+                                    <label for="claim_to_date" string="Revenue" colspan="4"/>
+                                    <field name="claim_to_date" nolabel="1" style="text-align: right;" colspan="2"/>
+                                    <field name="claim_progress" nolabel="1" style="text-align: right; " colspan="2"/>
+                                    <field name="claim_committed" nolabel="1" style="text-align: right; " colspan="2"/>
+                                    <field name="claim_budget" nolabel="1" style="text-align: right;" colspan="2"/>
+                                </group>
+                                <group class="oe_footer" col="12">
                                     <label for="expense" string="Cost of Sales" colspan="4"/>
                                     <field name="expense" nolabel="1" style="text-align: right;" colspan="2"/>
                                     <field name="expense_progress" nolabel="1" style="text-align: right; " colspan="2"/>
@@ -199,13 +207,7 @@
                                            colspan="2"/>
                                     <field name="expense_budget" nolabel="1" style="text-align: right;" colspan="2"/>
                                 </group>
-                                <group class="oe_footer" col="12">
-                                    <label for="claim_to_date" string="Revenue" colspan="4"/>
-                                    <field name="claim_to_date" nolabel="1" style="text-align: right;" colspan="2"/>
-                                    <field name="claim_progress" nolabel="1" style="text-align: right; " colspan="2"/>
-                                    <field name="claim_committed" nolabel="1" style="text-align: right; " colspan="2"/>
-                                    <field name="claim_budget" nolabel="1" style="text-align: right;" colspan="2"/>
-                                </group>
+
                                 <group class="oe_footer" col="12">
                                     <label string="Profit" colspan="4"/>
 
@@ -217,33 +219,36 @@
 
                             </page>
                             <page string="Contract Details">
-                                <group col="4">
+                                <group>
+                                <group>
 
                                     <field name="sale_orders" widget="many2many_tags"/>
-                                    <field name="advance_payment_bond"/>
                                     <field name="currency_id"/>
 
                                     <!--<field name="contract_value"/>-->
-                                    <field name="award_date" string="Start date"/>
+
                                     <field name="confirmation_date"/>
                                     <field name="contract_type"/>
-
+                                    <field name="award_date" string="Start date"/>
                                     <field name="end_date"/>
+                                    <field name="payment_terms"/>
+                                </group>
+                                <group>
+                                    <field name="advance_payment_bond"/>
+
+                                    <field name="performance_bond"/>
                                     <field name="dlp_duration"/>
                                     <field name="ld_max"/>
 
                                     <field name="ld_rate"/>
                                     <field name="consequence_damages"/>
                                     <field name="retention"/>
-                                    <field name="payment_terms"/>
+
                                     <field name="notes"/>
 
                                 </group>
-
-
+                                </group>
                             </page>
-
-
                         </notebook>
                     </sheet>
                     <div class="oe_chatter">

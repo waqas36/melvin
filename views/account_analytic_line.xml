@@ -1,39 +1,75 @@
 <odoo>
     <data>
-        <record id="account_analytic_line_form_ext" model="ir.ui.view">
-            <field name="name">account.analytic.line.form.ext</field>
+        <record id="hr_timesheet.hr_timesheet_line_form" model="ir.ui.view">
+            <field name="name">account.analytic.line.form</field>
             <field name="model">account.analytic.line</field>
-            <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
+            <field name="priority">1</field>
+            <field name="inherit_id" eval="False"/>
             <field name="arch" type="xml">
-                <field name="date" position="before">
-                    <field name="employee_id"/>
-                    <field name="supervisor"/>
-                    <field name="company"/>
-                </field>
-                <field name="amount" position="attributes">
-                    <attribute name="invisible">True</attribute>
-                </field>
-                <field name="unit_amount" position="attributes">
-                    <attribute name="invisible">True</attribute>
-                </field>
+                <form string="Analytic Entry">
+                    <sheet string="Analytic Entry">
+                        <group>
+                            <group>
+                                <field name="name" invisible="1" required="False"/>
+                                <field name="account_id" invisible="1" required="False"/>
+                                <field name="job_id"/>
+                                <field name="employee_id"/>
+                                <field name="supervisor"/>
+                                <field name="company"/>
+                                <field name="project_id"/>
+                                <field name="task_id"/>
+                            </group>
+                            <group>
+                                <field name="date"/>
+                                <field name="time_start" widget="float_time"/>
+                                <field name="time_end" widget="float_time"/>
+                                <field name="hour_worked" readonly="True"/>
+                                <field name="rate"/>
+                                <field name="charges"/>
+                                <field name="remarks"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!--<record id="account_analytic_line_form_ext" model="ir.ui.view">-->
+            <!--<field name="name">account.analytic.line.form.ext</field>-->
+            <!--<field name="model">account.analytic.line</field>-->
+            <!--<field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>-->
+            <!--<field name="arch" type="xml">-->
+                <!--<field name="date" position="before">-->
+                    <!--<field name="employee_id"/>-->
+                    <!--<field name="supervisor"/>-->
+                    <!--<field name="company"/>-->
+                <!--</field>-->
+                <!--<field name="amount" position="attributes">-->
+                    <!--<attribute name="invisible">True</attribute>-->
+                <!--</field>-->
                 <!--<field name="project_id" position="attributes">-->
                     <!--<attribute name="required">False</attribute>-->
                 <!--</field>-->
-                <!--<field name="account_id" position="attributes">-->
-                    <!--<attribute name="required">False</attribute>-->
+                <!--<field name="unit_amount" position="attributes">-->
+                    <!--<attribute name="invisible">True</attribute>-->
                 <!--</field>-->
+                <!--&lt;!&ndash;<field name="project_id" position="attributes">&ndash;&gt;-->
+                <!--&lt;!&ndash;<attribute name="required">False</attribute>&ndash;&gt;-->
+                <!--&lt;!&ndash;</field>&ndash;&gt;-->
+                <!--&lt;!&ndash;<field name="account_id" position="attributes">&ndash;&gt;-->
+                <!--&lt;!&ndash;<attribute name="required">False</attribute>&ndash;&gt;-->
+                <!--&lt;!&ndash;</field>&ndash;&gt;-->
 
-                <xpath expr="//form/sheet/group/group[2]" position="inside">
-                    <field name="job_id"/>
-                    <field name="time_start" widget="float_time"/>
-                    <field name="time_end" widget="float_time"/>
-                    <field name="hour_worked" readonly="True"   />
-                    <field name="rate"/>
-                    <field name="charges"/>
-                    <field name="remarks"/>
-                </xpath>
-            </field>
-        </record>
+                <!--<xpath expr="//form/sheet/group/group[2]" position="inside">-->
+                    <!--<field name="job_id"/>-->
+                    <!--<field name="time_start" widget="float_time"/>-->
+                    <!--<field name="time_end" widget="float_time"/>-->
+                    <!--<field name="hour_worked" readonly="True"/>-->
+                    <!--<field name="rate"/>-->
+                    <!--<field name="charges"/>-->
+                    <!--<field name="remarks"/>-->
+                <!--</xpath>-->
+            <!--</field>-->
+        <!--</record>-->
         <record id="account_analytic_line_tree_ext" model="ir.ui.view">
             <field name="name">account.analytic.line.tree.ext</field>
             <field name="model">account.analytic.line</field>

@@ -6,9 +6,7 @@
                 <t t-foreach="docs" t-as="o">
                     <t t-call="web.external_layout">
                         <div class="page">
-                            <br/>
                             <h3 class="text-center">Jobs Costing Report</h3>
-                            <br/>
                             <table class="table table-condensed">
                                 <tr>
                                     <td>
@@ -67,10 +65,7 @@
                                     </td>
                                 </tr>
                             </table>
-                            <br/>
-                            <br/>
                             <h3 class="text-center">Project Summary</h3>
-                            <br/>
                             <table class="table table-condensed">
                                 <thead>
                                     <tr>

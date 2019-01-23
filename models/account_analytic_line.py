@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-import datetime
 
-from odoo import models, fields, api,_
+from odoo import models, fields, api, _
 
 
 class AccountAnalyticLineExt(models.Model):
@@ -18,17 +17,22 @@ class AccountAnalyticLineExt(models.Model):
                 else:
                     raise Warning(_("End Time should be greater than Start Time"))
 
+    @api.depends('rate', 'hour_worked')
+    def _get_charges(self):
+        for rec in self:
+            rec.charges = rec.hour_worked * rec.rate
+
     employee_id = fields.Many2one('hr.employee', string="Employee")
-    # employee_code = fields.Char(string="Employee Code")
     job_id = fields.Many2one('jobs.dashboard', string='Job Code')
-    charges = fields.Float(string="Charges to Job")
+    charges = fields.Monetary(string="Charges to Job", compute=_get_charges, readonly=True)
     time_start = fields.Float('Time Start')
     time_end = fields.Float('Time End')
-    rate = fields.Char(string="Rate ($/hr)")
+    rate = fields.Float(string="Rate ($/hr)")
     supervisor = fields.Char(string="Supervisor")
     company = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
-    remarks = fields.Text(string="Remarks")
+    remarks = fields.Text(string="Notes")
     hour_worked = fields.Integer("Hours Worked", compute=_get_hours)
     account_id = fields.Many2one('account.analytic.account', 'Analytic Account', ondelete='restrict', index=True)
-    project_id = fields.Many2one('project.project', 'Project', domain=[('allow_timesheets', '=', True)])
+    name = fields.Char('Description',default="Timesheet")
+
 
