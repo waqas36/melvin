@@ -171,6 +171,164 @@
 
 
                             </div>
+                            <h5>Orders</h5>
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <strong>Order</strong>
+                                        </th>
+                                        <th>
+                                            <strong>Date</strong>
+                                        </th>
+                                        <th>
+                                            <strong>Order Title</strong>
+                                        </th>
+                                        <th>
+                                            <strong>Qty</strong>
+                                        </th>
+                                        <th>
+                                            <strong>Curr</strong>
+                                        </th>
+                                        <!--<th>-->
+                                        <!--<strong>U/Amnt</strong>-->
+                                        <!--</th>-->
+                                        <th>
+                                            <strong>T/amount</strong>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="compute_amount" t-value="0"/>
+                                    <t t-foreach="request.env['sale.order'].search([('job_dashboard_id.id','=',o.id)])"
+                                       t-as="so">
+                                        <t t-foreach="so.order_line" t-as="ol">
+                                            <tr>
+
+                                                <td>
+                                                    <t t-esc="so.name"/>
+                                                </td>
+                                                <td>
+                                                    <t t-esc="so.confirmation_date"/>
+                                                </td>
+                                                <td>
+                                                    <t t-esc="ol.name"/>
+                                                </td>
+                                                <td>
+                                                    <t t-esc="ol.product_uom_qty"/>
+                                                </td>
+
+                                                <td>
+                                                    <t t-esc="ol.currency_id.name"/>
+                                                </td>
+                                                <!--<td>-->
+                                                <!--<span t-field="ol.price_unit"/>-->
+                                                <!--</td>-->
+                                                <td>
+                                                    <t t-set="compute_amount"
+                                                       t-value="compute_amount+ol.price_subtotal"/>
+                                                    <t t-esc="ol.price_subtotal"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </t>
+                                    <tr>
+                                        <td>
+                                            <strong>Total :</strong>
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>
+                                            <span t-esc="'{0:,.2f}'.format(compute_amount)"/>
+
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <h5>Claims</h5>
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <strong>Invoice</strong>
+                                        </th>
+                                        <th>
+                                            <strong>Date</strong>
+                                        </th>
+                                        <th>
+                                            <strong>Claim Description</strong>
+                                        </th>
+                                        <th>
+                                            <strong>Qty</strong>
+                                        </th>
+                                        <th>
+                                            <strong>Curr</strong>
+                                        </th>
+                                        <!--<th>-->
+                                        <!--<strong>U/Amnt</strong>-->
+                                        <!--</th>-->
+                                        <th>
+                                            <strong>T/amount</strong>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="compute_amount" t-value="0"/>
+                                    <t t-set="source" t-value="request.env['sale.order'].search([('job_dashboard_id.id','=',o.id)])"/>
+                                    <t t-set="source_list" t-value="[]"/>
+                                    <t t-foreach="source" t-as="t">
+                                       <t t-esc="source_list.append(t.name)"/>
+                                    </t>
+                                    <t t-foreach="request.env['account.invoice'].search([('origin','in',source_list)])"
+                                       t-as="ai">
+                                        <t t-foreach="ai.invoice_line_ids" t-as="il">
+                                            <tr>
+
+                                                <td>
+                                                    <t t-esc="ai.name"/>
+                                                </td>
+                                                <td>
+                                                    <t t-esc="ai.date_invoice"/>
+                                                </td>
+                                                <td>
+                                                    <t t-esc="il.name"/>
+                                                </td>
+                                                <td>
+                                                    <t t-esc="il.quantity"/>
+                                                </td>
+
+                                                <td>
+                                                    <t t-esc="il.currency_id.name"/>
+                                                </td>
+                                                <!--<td>-->
+                                                <!--<span t-field="ol.price_unit"/>-->
+                                                <!--</td>-->
+                                                <td>
+                                                    <t t-set="compute_amount"
+                                                       t-value="compute_amount+il.price_subtotal"/>
+                                                    <t t-esc="il.price_subtotal"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </t>
+                                    <tr>
+                                        <td>
+                                            <strong>Total :</strong>
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>
+                                            <span t-esc="'{0:,.2f}'.format(compute_amount)"/>
+
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
 
                         </div>
 

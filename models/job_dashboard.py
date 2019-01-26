@@ -158,11 +158,11 @@ class JobsDashboard(models.Model):
 
     status = fields.Selection([('dispute', 'Dispute'), ('incident', 'Incident'), ('live', 'Live')], default='dispute',
                               readonly=True, compute='_on_change_state')
-    state = fields.Selection([('dispute', 'Dispute'), ('incident', 'Incident'), ('live', 'Live')], string='State',
-                             default='dispute')
-    green_color = fields.Boolean(default=False)
+    state = fields.Selection([ ('live', 'Live'),('incident', 'Incident'),('dispute', 'Dispute')], string='State',
+                             default='live')
+    green_color = fields.Boolean(default=True)
     orange_color = fields.Boolean(default=False)
-    red_color = fields.Boolean(default=True)
+    red_color = fields.Boolean(default=False)
 
     @api.depends('state')
     def _on_change_state(self):
