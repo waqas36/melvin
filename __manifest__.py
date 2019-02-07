@@ -1,23 +1,22 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "jobs",
+    'name': "Jobs",
 
     'summary': """
-        Short (1 phrase/line) summary of the module's purpose, used as
-        subtitle on modules listing or apps.openerp.com""",
+        Custom Jobs Module for Cyclect to track, monitor and manage Jobs that are ordered""",
 
     'description': """
-        Long description of module's purpose
+        Custom Jobs module created for the purpose of tracking, managing and monitoring job orders. Adds a wizard to create a job from sales order, removed option to create product from sales order, masterlist of jobs, submenus in jobs to provide summary of job status and overview, rights management.
     """,
 
-    'author': "My Company",
-    'website': "http://www.yourcompany.com",
+    'author': "Waqas",
+    'website': "http://www.cyclect.com.sg",
 
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/master/odoo/addons/base/module/module_data.xml
     # for the full list
     'category': 'Uncategorized',
-    'version': '0.1',
+    'version': '1.0',
 
     # any module necessary for this one to work correctly
     'depends': ['base', 'sale_management','hr_timesheet', 'purchase'],
