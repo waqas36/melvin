@@ -156,12 +156,12 @@ class JobsDashboard(models.Model):
 
     # sale_order_id = fields.Many2many('sale.order', string='Sale Order')
 
-    status = fields.Selection([('dispute', 'Dispute'), ('incident', 'Incident'), ('live', 'Live')], default='dispute',
+    status = fields.Selection([('dispute', 'ALERT'), ('incident', 'CLOSED'), ('live', 'LIVE')], default='live',
                               readonly=True, compute='_on_change_state')
-    state = fields.Selection([ ('live', 'Live'),('incident', 'Incident'),('dispute', 'Dispute')], string='State',
+    state = fields.Selection([ ('live', 'LIVE'),('incident', 'CLOSED'),('dispute', 'ALERT')], string='State',
                              default='live')
-    green_color = fields.Boolean(default=True)
-    orange_color = fields.Boolean(default=False)
+    black_color = fields.Boolean(default=True)
+    grey_color = fields.Boolean(default=False)
     red_color = fields.Boolean(default=False)
 
     @api.depends('state')
@@ -197,26 +197,26 @@ class JobsDashboard(models.Model):
     @api.multi
     def action_dispute(self):
         self.state = 'incident'
-        self.orange_color = True
+        self.grey_color = True
         self.red_color = False
 
     @api.multi
     def action_incident(self):
         self.state = 'live'
-        self.green_color = True
-        self.orange_color = False
+        self.black_color = True
+        self.grey_color = False
 
     @api.multi
     def action_back_to_dispute(self):
         self.state = 'dispute'
-        self.orange_color = False
+        self.grey_color = False
         self.red_color = True
 
     @api.multi
     def action_back_to_incident(self):
         self.state = 'incident'
-        self.green_color = False
-        self.orange_color = True
+        self.black_color = False
+        self.grey_color = True
 
 
 class PurchaseOrder(models.Model):
