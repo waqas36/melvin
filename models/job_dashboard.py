@@ -107,6 +107,18 @@ class JobsDashboard(models.Model):
                 worked_hours = worked_hours + sheet.hour_worked
             job.man_days_worked = worked_hours
 
+    @api.depends("sale_orders")
+    def _compute_contract_value(self):
+        """
+
+        :return:
+        """
+        for job in self:
+            amount = 0
+            for order in job.sale_orders:
+                amount = amount + order.amount_total
+            job.contract_value = amount
+
     payment_terms = fields.Text('Payment Terms')
     notes = fields.Text('Notes')
     name = fields.Char(string='Job Code', default='New')
@@ -118,7 +130,7 @@ class JobsDashboard(models.Model):
     award_date = fields.Date(string='Confirmation Date')
     end_date = fields.Date(string="End Date")
     customer_id = fields.Many2one('res.partner', string='Customer')
-    project_manager = fields.Many2one('res.users', string="Project Manager")
+    project_manager = fields.Many2one('hr.employee', string="Project Manager")
     contract_type = fields.Many2one('create.contract.type', string="Contract Type")
 
     project_duration = fields.Integer(string="Project Duration(days)", compute=_compute_duration, readonly=True)
@@ -151,7 +163,7 @@ class JobsDashboard(models.Model):
     consequence_damages = fields.Boolean(string="Consequential Damages")
     retention = fields.Integer(string="Retention")
     confirmation_date = fields.Date(string="Confirmation Date")
-    contract_value = fields.Integer(string="Contract Value")
+    contract_value = fields.Integer(string="Contract Value", compute="_compute_contract_value")
     currency_id = fields.Many2one("res.currency", string="Currency")
 
     # sale_order_id = fields.Many2many('sale.order', string='Sale Order')
@@ -189,10 +201,11 @@ class JobsDashboard(models.Model):
             self.delivery_address = sale_order.partner_id.contact_address
             self.confirmation_date = sale_order.confirmation_date
             self.currency_id = sale_order.currency_id
-            amount = 0
-            for order in self.sale_orders:
-                amount = amount + order.amount_total
-            self.contract_value = amount
+            # Make field readonly and computing it from sale order.
+            # amount = 0
+            # for order in self.sale_orders:
+            #     amount = amount + order.amount_total
+            # self.contract_value = amount
 
     @api.multi
     def action_dispute(self):

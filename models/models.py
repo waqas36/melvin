@@ -224,7 +224,7 @@ class JobSelection(models.TransientModel):
             obj.delivery_address = sale_order.partner_id.contact_address
             obj.confirmation_date = sale_order.confirmation_date
             obj.currency_id = sale_order.currency_id
-            obj.contract_value = sale_order.amount_total
+            # obj.contract_value = sale_order.amount_total
 
             return {
                 'name': ('Job Dashboard'),
