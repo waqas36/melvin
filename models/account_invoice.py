@@ -6,6 +6,7 @@ class ResCompany(models.Model):
 
     project_code = fields.Many2one('jobs.dashboard', string='Job Code', store=True, compute="_get_project_code", readonly=False)
 
+    @api.one
     @api.depends('origin')
     def _get_project_code(self):
         sale_obj = self.env['sale.order'].search([('name', '=', self.origin)])
