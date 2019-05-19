@@ -39,17 +39,22 @@ class JobsDashboard(models.Model):
         :return:
         """
         for job in self:
-            purchase_orders = self.env["purchase.order"].search([("job_id", '=', job.id),('state', 'in', ['purchase', 'done'])])
+            purchase_orders = self.env["purchase.order"].search([("job_id", '=', job.id),
+                                                                 ('state', 'in', ['purchase', 'done'])])
+            vendor_bills = self.env["account.invoice"].search([("project_code", "=", job.id),
+                                                               ("type", "=", "in_invoice")])
+            expense = 0
             if purchase_orders:
-                expense = 0
                 committed = 0
                 for po in purchase_orders:
                     committed = committed + po.amount_total
-                    for vendor_bill in po.invoice_ids:
-                        if vendor_bill.state == "paid":
-                            expense = expense + vendor_bill.amount_total
-                job.expense = expense
                 job.expense_committed = committed
+
+            for vendor_bill in vendor_bills:
+                if vendor_bill.state == "paid":
+                    expense = expense + vendor_bill.amount_total
+
+            job.expense = expense
             if job.expense_budget:
                 job.expense_progress =(job.expense / job.expense_budget) * 100
 
@@ -61,12 +66,12 @@ class JobsDashboard(models.Model):
         """
         for job in self:
             claim_to_date = 0
-            committed = 0
-            for order in job.sale_orders:
-                committed = committed + order.amount_total
-                for invoice in order.invoice_ids:
-                    if invoice.state == 'paid':
-                        claim_to_date = claim_to_date + invoice.amount_total
+            committed = job.contract_value
+            job_invoices = self.env["account.invoice"].search([("project_code", "=", job.id),
+                                                               ("type", "=", "out_invoice")])
+            for invoice in job_invoices:
+                if invoice.state == 'paid':
+                    claim_to_date = claim_to_date + invoice.amount_total
             job.claim_committed = committed
             job.claim_to_date = claim_to_date
             if job.claim_budget:
