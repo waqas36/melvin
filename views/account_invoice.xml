@@ -8,6 +8,9 @@
 
                 <field name="payment_term_id" position="after">
                     <field name="project_code"/>
+                     <field name="project_code_duplicate" invisible="1"/>
+
+
                 </field>
 
             </field>
